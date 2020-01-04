@@ -33,6 +33,11 @@ class Licenses extends LMFWC_REST_Controller
     protected $settings = array();
 
     /**
+     * @var string
+     */
+    protected $instance_id_meta_key = 'instance_id';
+
+    /**
      * Licenses constructor.
      */
     public function __construct()
@@ -107,8 +112,8 @@ class Licenses extends LMFWC_REST_Controller
                         'license_key' => array(
                             'description' => 'License Key',
                             'type'        => 'string',
-                        ),
-                    ),
+                        )
+                    )
                 )
             )
         );
@@ -116,7 +121,7 @@ class Licenses extends LMFWC_REST_Controller
         /**
          * GET licenses/activate/{license_key}
          *
-         * Activates a license key
+         * Activates a license key without instance ID
          */
         register_rest_route(
             $this->namespace, $this->rest_base . '/activate/(?P<license_key>[\w-]+)', array(
@@ -127,8 +132,32 @@ class Licenses extends LMFWC_REST_Controller
                         'license_key' => array(
                             'description' => 'License Key',
                             'type'        => 'string',
+                        )
+                    )
+                )
+            )
+        );
+
+        /**
+         * GET licenses/activate/{license_key}/{instance_id}
+         *
+         * Activates a license key with a unique instance ID
+         */
+        register_rest_route(
+            $this->namespace, $this->rest_base . '/activate/(?P<license_key>[\w-]+)/(?P<instance_id>[\w-_@\.]+)', array(
+                array(
+                    'methods'  => WP_REST_Server::READABLE,
+                    'callback' => array($this, 'activateLicense'),
+                    'args'     => array(
+                        'license_key' => array(
+                            'description' => 'License Key',
+                            'type'        => 'string',
                         ),
-                    ),
+                        'instance_id' => array(
+                            'description' => 'Instance ID',
+                            'type'        => 'string',
+                        )
+                    )
                 )
             )
         );
@@ -136,7 +165,7 @@ class Licenses extends LMFWC_REST_Controller
         /**
          * GET licenses/deactivate/{license_key}
          *
-         * Deactivates a license key
+         * Deactivates a license key without instance ID
          */
         register_rest_route(
             $this->namespace, $this->rest_base . '/deactivate/(?P<license_key>[\w-]+)', array(
@@ -154,9 +183,33 @@ class Licenses extends LMFWC_REST_Controller
         );
 
         /**
-         * PUT licenses/activate/{license_key}
+         * GET licenses/deactivate/{license_key}/{instance_id}
          *
-         * Activates a license key
+         * Deactivates a license key with a unique instance ID
+         */
+        register_rest_route(
+            $this->namespace, $this->rest_base . '/deactivate/(?P<license_key>[\w-]+)/(?P<instance_id>[\w-_@\.]+)', array(
+                array(
+                    'methods'  => WP_REST_Server::READABLE,
+                    'callback' => array($this, 'deactivateLicense'),
+                    'args'     => array(
+                        'license_key' => array(
+                            'description' => 'License Key',
+                            'type'        => 'string'
+                        ),
+                        'instance_id' => array(
+                            'description' => 'Instance ID',
+                            'type'        => 'string',
+                        )
+                    )
+                )
+            )
+        );
+
+        /**
+         * PUT licenses/validate/{license_key}
+         *
+         * Validates a license key without checking any instance ID
          */
         register_rest_route(
             $this->namespace, $this->rest_base . '/validate/(?P<license_key>[\w-]+)', array(
@@ -167,8 +220,32 @@ class Licenses extends LMFWC_REST_Controller
                         'license_key' => array(
                             'description' => 'License Key',
                             'type'        => 'string',
+                        )
+                    )
+                )
+            )
+        );
+
+        /**
+         * PUT licenses/validate/{license_key}/{instance_id}
+         *
+         * Validates a license key also checking the existence of an instance ID
+         */
+        register_rest_route(
+            $this->namespace, $this->rest_base . '/validate/(?P<license_key>[\w-]+)/(?P<instance_id>[\w-_@\.]+)', array(
+                array(
+                    'methods'  => WP_REST_Server::READABLE,
+                    'callback' => array($this, 'validateLicense'),
+                    'args'     => array(
+                        'license_key' => array(
+                            'description' => 'License Key',
+                            'type'        => 'string',
                         ),
-                    ),
+                        'instance_id' => array(
+                            'description' => 'Instance ID',
+                            'type'        => 'string',
+                        )
+                    )
                 )
             )
         );
@@ -213,6 +290,9 @@ class Licenses extends LMFWC_REST_Controller
             // Remove the hash, decrypt the license key, and add it to the response
             unset($licenseData['hash']);
             $licenseData['licenseKey'] = $license->getDecryptedLicenseKey();
+			
+			$licenseData['instanceIDs'] = lmfwc_get_license_meta($licenseData['licenseKey'], $this->instance_id_meta_key);
+			
             $response[] = $licenseData;
         }
 
@@ -273,6 +353,8 @@ class Licenses extends LMFWC_REST_Controller
         // Remove the hash and decrypt the license key
         unset($licenseData['hash']);
         $licenseData['licenseKey'] = $license->getDecryptedLicenseKey();
+
+		$licenseData['instanceIDs'] = lmfwc_get_license_meta($licenseData['licenseKey'], $this->instance_id_meta_key);
 
         return $this->response(true, $licenseData, 200, 'v2/licenses/{license_key}');
     }
@@ -500,11 +582,14 @@ class Licenses extends LMFWC_REST_Controller
         unset($licenseData['hash']);
         $licenseData['licenseKey'] = $updatedLicense->getDecryptedLicenseKey();
 
+		$licenseData['instanceIDs'] = lmfwc_get_license_meta($licenseData['licenseKey'], $this->instance_id_meta_key);
+
         return $this->response(true, $licenseData, 200, 'v2/licenses/{license_key}');
     }
 
     /**
-     * Callback for the GET licenses/activate/{license_key} route. This will activate a license key (if possible)
+     * Callback for the GET licenses/activate/{license_key} and licenses/activate/{license_key}/{instance_id} route.
+	 * This will activate a license key (if possible)
      *
      * @param WP_REST_Request $request
      *
@@ -517,6 +602,11 @@ class Licenses extends LMFWC_REST_Controller
         }
 
         $licenseKey = sanitize_text_field($request->get_param('license_key'));
+
+        $instanceID = $request->get_param('instance_id');
+		if ( $instanceID ) {
+			$instanceID = sanitize_text_field($instanceID);
+		}
 
         if (!$licenseKey) {
             return new WP_Error(
@@ -577,6 +667,28 @@ class Licenses extends LMFWC_REST_Controller
                 array('status' => 404)
             );
         }
+		
+		if ($instanceID) {
+			$instanceIDs = lmfwc_get_license_meta($licenseKey, $this->instance_id_meta_key);
+
+			if (is_array($instanceIDs)) {
+				if (in_array($instanceID, $instanceIDs)) {
+					return new WP_Error(
+						'lmfwc_rest_data_error',
+						sprintf(
+							'License Key: %s with instance ID %s already activated.',
+							$licenseKey,
+							$instanceID
+						),
+						array('status' => 404)
+					);
+				}
+				
+				else {
+					lmfwc_add_license_meta($licenseKey, $this->instance_id_meta_key, $instanceID);
+				}
+			}
+		}
 
         // Activate the license key
         try {
@@ -609,11 +721,14 @@ class Licenses extends LMFWC_REST_Controller
         unset($licenseData['hash']);
         $licenseData['licenseKey'] = $updatedLicense->getDecryptedLicenseKey();
 
+		$licenseData['instanceIDs'] = lmfwc_get_license_meta($licenseData['licenseKey'], $this->instance_id_meta_key);
+
         return $this->response(true, $licenseData, 200, 'v2/licenses/activate/{license_key}');
     }
 
     /**
-     * Callback for the GET licenses/deactivate/{license_key} route. This will deactivate a license key (if possible)
+     * Callback for the GET licenses/deactivate/{license_key} and licenses/deactivate/{license_key}/{instance_id} route.
+	 * This will deactivate a license key (if possible)
      *
      * @param WP_REST_Request $request
      *
@@ -626,6 +741,11 @@ class Licenses extends LMFWC_REST_Controller
         }
 
         $licenseKey = sanitize_text_field($request->get_param('license_key'));
+
+        $instanceID = $request->get_param('instance_id');
+		if ( $instanceID ) {
+			$instanceID = sanitize_text_field($instanceID);
+		}
 
         if (!$licenseKey) {
             return new WP_Error(
@@ -687,6 +807,28 @@ class Licenses extends LMFWC_REST_Controller
             );
         }
 
+		if ($instanceID) {
+			$instanceIDs = lmfwc_get_license_meta($licenseKey, $this->instance_id_meta_key);
+
+			if (is_array($instanceIDs)) {
+				if (in_array($instanceID, $instanceIDs)) {
+					lmfwc_delete_license_meta($licenseKey, $this->instance_id_meta_key, $instanceID);
+				}
+				
+				else {
+					return new WP_Error(
+						'lmfwc_rest_data_error',
+						sprintf(
+							'License Key: %s with instance ID %s not activated yet.',
+							$licenseKey,
+							$instanceID
+						),
+						array('status' => 404)
+					);
+				}
+			}
+		}
+
         // Deactivate the license key
         try {
             $timesActivatedNew = intval($timesActivated) - 1;
@@ -712,12 +854,14 @@ class Licenses extends LMFWC_REST_Controller
         unset($licenseData['hash']);
         $licenseData['licenseKey'] = $updatedLicense->getDecryptedLicenseKey();
 
+		$licenseData['instanceIDs'] = lmfwc_get_license_meta($licenseData['licenseKey'], $this->instance_id_meta_key);
+
         return $this->response(true, $licenseData, 200, 'v2/licenses/deactivate/{license_key}');
     }
 
     /**
-     * Callback for the GET licenses/validate/{license_key} route. This check and verify the activation status of a
-     * given license key.
+     * Callback for the GET licenses/validate/{license_key} and licenses/validate/{license_key}/{instance_id} route.
+	 * This checks and verifies the activation status of a given license key.
      *
      * @param WP_REST_Request $request
      *
@@ -729,17 +873,12 @@ class Licenses extends LMFWC_REST_Controller
             return $this->routeDisabledError();
         }
 
-        $urlParams = $request->get_url_params();
+        $licenseKey = sanitize_text_field($request->get_param('license_key'));
 
-        if (!array_key_exists('license_key', $urlParams)) {
-            return new WP_Error(
-                'lmfwc_rest_data_error',
-                'License key is invalid.',
-                array('status' => 404)
-            );
-        }
-
-        $licenseKey = sanitize_text_field($urlParams['license_key']);
+        $instanceID = $request->get_param('instance_id');
+		if ( $instanceID ) {
+			$instanceID = sanitize_text_field($instanceID);
+		}
 
         if (!$licenseKey) {
             return new WP_Error(
@@ -774,6 +913,24 @@ class Licenses extends LMFWC_REST_Controller
                 array('status' => 404)
             );
         }
+
+		if ($instanceID) {
+			$instanceIDs = lmfwc_get_license_meta($licenseKey, $this->instance_id_meta_key);
+
+			if (is_array($instanceIDs)) {
+				if (!in_array($instanceID, $instanceIDs)) {
+					return new WP_Error(
+						'lmfwc_rest_data_error',
+						sprintf(
+							'License Key: %s with instance ID %s not activated yet.',
+							$licenseKey,
+							$instanceID
+						),
+						array('status' => 404)
+					);
+				}
+			}
+		}
 
         $result = array(
             'timesActivated'       => intval($license->getTimesActivated()),
