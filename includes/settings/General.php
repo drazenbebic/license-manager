@@ -267,19 +267,19 @@ class General
             ),
             array(
                 'id'         => '014',
-                'name'       => 'v2/licenses/activate/{license_key}',
+                'name'       => 'v2/licenses/activate/{license_key} and v2/licenses/activate/{license_key}/{instance_id}',
                 'method'     => 'GET',
                 'deprecated' => false,
             ),
             array(
                 'id'         => '015',
-                'name'       => 'v2/licenses/deactivate/{license_key}',
+                'name'       => 'v2/licenses/deactivate/{license_key} and v2/licenses/deactivate/{license_key}/{instance_id}',
                 'method'     => 'GET',
                 'deprecated' => false,
             ),
             array(
                 'id'         => '016',
-                'name'       => 'v2/licenses/validate/{license_key}',
+                'name'       => 'v2/licenses/validate/{license_key} and v2/licenses/validate/{license_key}/{instance_id}',
                 'method'     => 'GET',
                 'deprecated' => false,
             ),
