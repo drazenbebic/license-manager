@@ -16,6 +16,7 @@ use LicenseManagerForWooCommerce\Abstracts\Singleton;
 use LicenseManagerForWooCommerce\Controllers\ApiKey as ApiKeyController;
 use LicenseManagerForWooCommerce\Controllers\Generator as GeneratorController;
 use LicenseManagerForWooCommerce\Controllers\License as LicenseController;
+use LicenseManagerForWooCommerce\Controllers\LicenseInstance as LicenseInstanceController;
 
 defined('ABSPATH') || exit;
 
@@ -114,6 +115,7 @@ final class Main extends Singleton
         if (isset($_GET['page']) && 
             (
                 $_GET['page'] == AdminMenus::LICENSES_PAGE
+                || $_GET['page'] == AdminMenus::LICENSE_INSTANCES_PAGE
                 || $_GET['page'] == AdminMenus::GENERATORS_PAGE
                 || $_GET['page'] == AdminMenus::SETTINGS_PAGE
             )
@@ -135,6 +137,11 @@ final class Main extends Singleton
             wp_localize_script('lmfwc_licenses_page_js', 'security', array(
                 'dropdownSearch' => wp_create_nonce('lmfwc_dropdown_search')
             ));
+        }
+
+        // License instances page
+        if (isset($_GET['page']) && $_GET['page'] == AdminMenus::LICENSE_INSTANCES_PAGE) {
+            wp_enqueue_script('lmfwc_license_instances_page_js', LMFWC_JS_URL . 'license_instances_page.js');
         }
 
         // Generators page
@@ -161,6 +168,13 @@ final class Main extends Singleton
             'lmfwc_admin_js', 'license', array(
                 'show'     => wp_create_nonce('lmfwc_show_license_key'),
                 'show_all' => wp_create_nonce('lmfwc_show_all_license_keys'),
+            )
+        );
+
+        wp_localize_script(
+            'lmfwc_admin_js', 'licenseInstance', array(
+                'show'     => wp_create_nonce('lmfwc_show_license_instance_key'),
+                'show_all' => wp_create_nonce('lmfwc_show_all_license_instance_keys'),
             )
         );
     }
@@ -269,6 +283,7 @@ final class Main extends Singleton
         new Repositories\PostMeta();
         new Repositories\Users();
         new LicenseController();
+        new LicenseInstanceController();
         new GeneratorController();
         new ApiKeyController();
         new API\Setup();

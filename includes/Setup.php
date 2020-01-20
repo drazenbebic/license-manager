@@ -32,9 +32,14 @@ class Setup
     const LICENSE_META_TABLE_NAME = 'lmfwc_licenses_meta';
 
     /**
+     * @var string
+     */
+    const LICENSE_INSTANCES_TABLE_NAME = 'lmfwc_licenses_instances';
+
+    /**
      * @var int
      */
-    const DB_VERSION = 104;
+    const DB_VERSION = 105;
 
     /**
      * Installation script.
@@ -70,7 +75,8 @@ class Setup
             $wpdb->prefix . self::LICENSES_TABLE_NAME,
             $wpdb->prefix . self::GENERATORS_TABLE_NAME,
             $wpdb->prefix . self::API_KEYS_TABLE_NAME,
-            $wpdb->prefix . self::LICENSE_META_TABLE_NAME
+            $wpdb->prefix . self::LICENSE_META_TABLE_NAME,
+            $wpdb->prefix . self::LICENSE_INSTANCES_TABLE_NAME
         );
 
         foreach ($tables as $table) {
@@ -124,6 +130,7 @@ class Setup
         $table2 = $wpdb->prefix . self::GENERATORS_TABLE_NAME;
         $table3 = $wpdb->prefix . self::API_KEYS_TABLE_NAME;
         $table4 = $wpdb->prefix . self::LICENSE_META_TABLE_NAME;
+        $table5 = $wpdb->prefix . self::LICENSE_INSTANCES_TABLE_NAME;
 
         dbDelta("
             CREATE TABLE IF NOT EXISTS $table1 (
@@ -198,6 +205,21 @@ class Setup
                 `updated_at` DATETIME NULL DEFAULT NULL,
                 `updated_by` BIGINT(20) NULL DEFAULT NULL,
                 PRIMARY KEY (`meta_id`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8
+        ");
+
+        dbDelta("
+            CREATE TABLE IF NOT EXISTS $table5 (
+                `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
+                `license_id` BIGINT(20) NOT NULL,
+                `instance_key` longtext NOT NULL,
+                `instance_hash` longtext NOT NULL,
+                `created_at` datetime DEFAULT NULL,
+                `created_by` bigint(20) DEFAULT NULL,
+                `updated_at` datetime DEFAULT NULL,
+                `updated_by` bigint(20) DEFAULT NULL,
+             PRIMARY KEY (`id`),
+             KEY `license_id` (`license_id`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8
         ");
     }
@@ -317,6 +339,7 @@ class Setup
                 '007' => '1',
                 '008' => '1',
                 '009' => '1',
+
                 '010' => '1',
                 '011' => '1',
                 '012' => '1',
@@ -327,7 +350,15 @@ class Setup
                 '017' => '1',
                 '018' => '1',
                 '019' => '1',
-                '020' => '1'
+                '020' => '1',
+
+                '021' => '1',
+                '022' => '1',
+                '023' => '1',
+                '024' => '1',
+                '025' => '1',
+                '026' => '1',
+                '027' => '1',
             )
         );
 

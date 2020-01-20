@@ -6,11 +6,14 @@ use LicenseManagerForWooCommerce\Enums\LicenseStatus;
 use LicenseManagerForWooCommerce\Lists\APIKeyList;
 use LicenseManagerForWooCommerce\Lists\GeneratorsList;
 use LicenseManagerForWooCommerce\Lists\LicensesList;
+use LicenseManagerForWooCommerce\Lists\LicenseInstancesList;
 use LicenseManagerForWooCommerce\Models\Resources\ApiKey as ApiKeyResourceModel;
 use LicenseManagerForWooCommerce\Models\Resources\License as LicenseResourceModel;
+use LicenseManagerForWooCommerce\Models\Resources\LicenseInstance as LicenseInstanceResourceModel;
 use LicenseManagerForWooCommerce\Repositories\Resources\ApiKey as ApiKeyResourceRepository;
 use LicenseManagerForWooCommerce\Repositories\Resources\Generator as GeneratorResourceRepository;
 use LicenseManagerForWooCommerce\Repositories\Resources\License as LicenseResourceRepository;
+use LicenseManagerForWooCommerce\Repositories\Resources\LicenseInstance as LicenseInstanceResourceRepository;
 
 defined('ABSPATH') || exit;
 
@@ -31,6 +34,11 @@ class AdminMenus
     const LICENSES_PAGE = 'lmfwc_licenses';
 
     /**
+     * License instances page slug.
+     */
+    const LICENSE_INSTANCES_PAGE = 'lmfwc_license_instances';
+
+    /**
      * Generators page slug.
      */
     const GENERATORS_PAGE = 'lmfwc_generators';
@@ -44,6 +52,11 @@ class AdminMenus
      * @var LicensesList
      */
     private $licenses;
+
+    /**
+     * @var LicenseInstancesList
+     */
+    private $licenseInstances;
 
     /**
      * @var GeneratorsList
@@ -77,6 +90,7 @@ class AdminMenus
     {
         return array(
             'toplevel_page_lmfwc_licenses',
+            'license-manager_page_lmfwc_license_instances',
             'license-manager_page_lmfwc_generators',
             'license-manager_page_lmfwc_settings'
         );
@@ -106,6 +120,16 @@ class AdminMenus
             array($this, 'licensesPage')
         );
         add_action('load-' . $licensesHook, array($this, 'licensesPageScreenOptions'));
+
+        $licenseInstancesHook = add_submenu_page(
+            self::LICENSES_PAGE,
+            __('License Manager', 'lmfwc'),
+            __('License instances', 'lmfwc'),
+            'manage_options',
+            self::LICENSE_INSTANCES_PAGE,
+            array($this, 'licenseInstancesPage')
+        );
+        add_action('load-' . $licenseInstancesHook, array($this, 'licenseInstancesPageScreenOptions'));
 
         // Generators List Page
         $generatorsHook = add_submenu_page(
@@ -144,6 +168,23 @@ class AdminMenus
         add_screen_option($option, $args);
 
         $this->licenses = new LicensesList();
+    }
+
+    /**
+     * Adds the supported screen options for the license instances list.
+     */
+    public function licenseInstancesPageScreenOptions()
+    {
+        $option = 'per_page';
+        $args = array(
+            'label' => __('License instances per page', 'lmfwc'),
+            'default' => 10,
+            'option' => 'lmfwc_license_instances_per_page'
+        );
+
+        add_screen_option($option, $args);
+
+        $this->licenseInstances = new LicenseInstancesList();
     }
 
     /**
@@ -210,7 +251,7 @@ class AdminMenus
 
             $licenseKey = $license->getDecryptedLicenseKey();
         }
-
+		
         // Edit, add or import license keys
         if ($action === 'edit' || $action === 'add' || $action === 'import') {
             wp_enqueue_style('lmfwc-jquery-ui-datepicker');
@@ -219,6 +260,44 @@ class AdminMenus
         }
 
         include LMFWC_TEMPLATES_DIR . 'page-licenses.php';
+    }
+
+    /**
+     * Sets up the license instances page.
+     */
+    public function licenseInstancesPage()
+    {
+        $action                = $this->getCurrentAction($default = 'list');
+        $licenseInstances      = $this->licenseInstances;
+        $addLicenseInstanceUrl = admin_url(
+            sprintf(
+                'admin.php?page=%s&action=add',
+                self::LICENSE_INSTANCES_PAGE
+            )
+        );
+
+        // Edit license instances
+        if ($action === 'edit') {
+            if (!current_user_can('manage_options')) {
+                wp_die(__('Insufficient permission', 'lmfwc'));
+            }
+
+            /** @var LicenseInstanceResourceModel $license */
+            $licenseInstance = LicenseInstanceResourceRepository::instance()->find(absint($_GET['id']));
+
+            if (!$licenseInstance) {
+                wp_die(__('Invalid license instance ID', 'lmfwc'));
+            }
+
+            $instanceKey = $licenseInstance->getDecryptedLicenseInstanceKey();
+        }
+		
+        // Edit, add or import license keys
+        if ($action === 'edit' || $action === 'add') {
+          // Currently do nothing, placeholder for wp_enqueue_style() and wp_enqueue_script() calls
+        }
+
+        include LMFWC_TEMPLATES_DIR . 'page-license-instances.php';
     }
 
     /**

@@ -37,7 +37,8 @@ class Setup
             '\LicenseManagerForWooCommerce\API\v1\Generators',
             // REST API v2 controllers.
             '\LicenseManagerForWooCommerce\API\v2\Licenses',
-            '\LicenseManagerForWooCommerce\API\v2\Generators'
+            '\LicenseManagerForWooCommerce\API\v2\Generators',
+            '\LicenseManagerForWooCommerce\API\v2\LicenseInstances'
         );
 
         foreach ($controllers as $controller) {

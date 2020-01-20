@@ -6,6 +6,7 @@
  */
 
 use LicenseManagerForWooCommerce\Repositories\Resources\License as LicenseResourceRepository;
+use LicenseManagerForWooCommerce\Repositories\Resources\LicenseInstance as LicenseInstanceResourceRepository;
 
 defined('ABSPATH') || exit;
 
@@ -57,6 +58,60 @@ function lmfwc_duplicate($licenseKey, $licenseKeyId = null)
     return $duplicate;
 }
 add_filter('lmfwc_duplicate', 'lmfwc_duplicate', 10, 2);
+
+/**
+ * Checks if a license instance ID for a given license key already exists inside the database table.
+ *
+ * @param string   $instanceKey
+ * @param int      $licenseID
+ * @param null|int $instanceID
+ *
+ * @return bool
+ */
+function lmfwc_duplicate_instance($instanceKey, $licenseID, $instanceID = null)
+{
+    $duplicate = false;
+    $hash      = apply_filters('lmfwc_hash', $instanceKey);
+
+    // Add action
+    if ($instanceID === null) {
+        $query = array(
+          'license_id'    => $licenseID,
+          'instance_hash' => $hash
+        );
+
+        if (LicenseInstanceResourceRepository::instance()->findBy($query)) {
+            $duplicate = true;
+        }
+    }
+
+    // Update action
+    elseif ($instanceID !== null && is_numeric($instanceID)) {
+        global $wpdb;
+
+        $table = LicenseInstanceResourceRepository::instance()->getTable();
+
+        $query = "
+            SELECT
+                id
+            FROM
+                {$table}
+            WHERE
+                1=1
+                AND license_id = '{$licenseID}'
+                AND instance_hash = '{$hash}'
+                AND id NOT LIKE {$instanceID}
+            ;
+        ";
+
+        if (LicenseInstanceResourceRepository::instance()->query($query)) {
+            $duplicate = true;
+        }
+    }
+
+    return $duplicate;
+}
+add_filter('lmfwc_duplicate_instance', 'lmfwc_duplicate_instance', 10, 3);
 
 /**
  * Generates a random hash.

@@ -7,15 +7,13 @@
             || $action === 'deactivate'
             || $action === 'delete'
         ) {
-            include_once('licenses/page-list.php');
+            include_once('license-instances/page-list.php');
         } elseif ($action === 'add') {
-            include_once('licenses/page-add.php');
+            include_once('license-instances/page-add.php');
         } elseif ($action === 'import') {
-            include_once('licenses/page-import.php');
+            include_once('license-instances/page-import.php');
         } elseif ($action === 'edit') {
-            include_once('licenses/page-edit.php');
-        } elseif ($action === 'manage_instances') {
-            include_once('licenses/page-manage_instances.php');
+            include_once('license-instances/page-edit.php');
         }
     ?>
 </div>

@@ -267,22 +267,23 @@ class General
             ),
             array(
                 'id'         => '014',
-                'name'       => 'v2/licenses/activate/{license_key} and v2/licenses/activate/{license_key}/{instance_id}',
+                'name'       => 'v2/licenses/activate/{license_key}',
                 'method'     => 'GET',
                 'deprecated' => false,
             ),
             array(
                 'id'         => '015',
-                'name'       => 'v2/licenses/deactivate/{license_key} and v2/licenses/deactivate/{license_key}/{instance_id}',
+                'name'       => 'v2/licenses/deactivate/{license_key}',
                 'method'     => 'GET',
                 'deprecated' => false,
             ),
             array(
                 'id'         => '016',
-                'name'       => 'v2/licenses/validate/{license_key} and v2/licenses/validate/{license_key}/{instance_id}',
+                'name'       => 'v2/licenses/validate/{license_key}',
                 'method'     => 'GET',
                 'deprecated' => false,
             ),
+
             array(
                 'id'         => '017',
                 'name'       => 'v2/generators',
@@ -307,6 +308,37 @@ class General
                 'method'     => 'GET',
                 'deprecated' => false,
             ),
+
+            array(
+                'id'         => '021',
+                'name'       => 'v2/license-instances',
+                'method'     => 'GET',
+                'deprecated' => false,
+            ),
+            array(
+                'id'         => '022',
+                'name'       => 'v2/license-instances/{license_key}/{instance_key}',
+                'method'     => 'GET',
+                'deprecated' => false,
+            ),
+            array(
+                'id'         => '023',
+                'name'       => 'v2/license-instances/activate/{license_key}/{instance_key}',
+                'method'     => 'GET',
+                'deprecated' => false,
+            ),
+            array(
+                'id'         => '024',
+                'name'       => 'v2/license-instances/deactivate/{license_key}/{instance_key}',
+                'method'     => 'GET',
+                'deprecated' => false,
+            ),
+            array(
+                'id'         => '025',
+                'name'       => 'v2/license-instances/validate/{license_key}/{instance_key}',
+                'method'     => 'GET',
+                'deprecated' => false,
+            )
         );
 
         if (array_key_exists($field, $this->settings)) {

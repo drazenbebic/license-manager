@@ -372,6 +372,19 @@ class LicensesList extends WP_List_Table
             }
         }
 
+        // Manage instances
+        $actions['manage_instances'] = sprintf(
+            '<a href="%s">%s</a>',
+            admin_url(
+				sprintf(
+					'admin.php?page=%s&license_id=%d',
+					AdminMenus::LICENSE_INSTANCES_PAGE,
+					intval($item['id'])
+                )
+            ),
+            __('Manage instances', 'lmfwc')
+        );
+
         // Delete
         $actions['delete'] = sprintf(
             '<a href="%s">%s</a>',
