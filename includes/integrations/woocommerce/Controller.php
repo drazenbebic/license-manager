@@ -118,6 +118,10 @@ class Controller extends AbstractIntegrationController implements IntegrationCon
         $result   = array();
         $orderIds = $wpdb->get_col($query);
 
+        if (empty($orderIds)) {
+            return array();
+        }
+
         /** @var LicenseResourceModel[] $licenses */
         $licenses = LicenseResourceRepository::instance()->findAllBy(
             array(
@@ -129,7 +133,12 @@ class Controller extends AbstractIntegrationController implements IntegrationCon
         foreach ($licenses as $license) {
             $product = wc_get_product($license->getProductId());
 
-            $result[$license->getProductId()]['name']       = $product->get_formatted_name();
+            if (!$product) {
+                $result[$license->getProductId()]['name'] = '#' . $license->getProductId();
+            } else {
+                $result[$license->getProductId()]['name'] = $product->get_formatted_name();
+            }
+
             $result[$license->getProductId()]['licenses'][] = $license;
         }
 

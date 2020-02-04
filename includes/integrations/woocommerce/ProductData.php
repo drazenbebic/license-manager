@@ -183,6 +183,8 @@ class ProductData
             __('License key(s) in stock and available for sale', 'lmfwc')
         );
 
+        do_action('lmfwc_product_data_panel', $post);
+
         echo '</div></div>';
     }
 
@@ -271,6 +273,8 @@ class ProductData
             update_post_meta($postId, 'lmfwc_licensed_product_use_generator', 0);
             update_post_meta($postId, 'lmfwc_licensed_product_assigned_generator', 0);
         }
+
+        do_action('lmfwc_product_data_save_post', $postId);
     }
 
     /**

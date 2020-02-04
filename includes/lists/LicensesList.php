@@ -478,8 +478,26 @@ class LicensesList extends WP_List_Table
     {
         $html = '';
 
-        $timesActivated    = intval($item['times_activated']);
-        $timesActivatedMax = intval($item['times_activated_max']);
+        if ($item['times_activated_max'] === null) {
+            $timesActivatedMax = null;
+        } else {
+            $timesActivatedMax = intval($item['times_activated_max']);
+        }
+
+        if ($item['times_activated'] === null) {
+            $timesActivated = null;
+        } else {
+            $timesActivated = intval($item['times_activated']);
+        }
+
+        if ($timesActivatedMax === null) {
+            return sprintf(
+                '<div class="lmfwc-status %s"><small>%d</small> / <b>%s</b></div>',
+                'activation done',
+                intval($timesActivated),
+                '&infin;'
+            );
+        }
 
         if ($timesActivated == $timesActivatedMax) {
             $icon = '<span class="dashicons dashicons-yes"></span>';

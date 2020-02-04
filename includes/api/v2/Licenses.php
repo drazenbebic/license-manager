@@ -552,19 +552,15 @@ class Licenses extends LMFWC_REST_Controller
             );
         }
 
-        // Check if the license key can be activated
-        $timesActivated    = absint($license->getTimesActivated());
-        $timesActivatedMax = absint($license->getTimesActivatedMax());
+        $timesActivated    = null;
+        $timesActivatedMax = null;
 
-        if (!$timesActivatedMax) {
-            return new WP_Error(
-                'lmfwc_rest_data_error',
-                sprintf(
-                    'License Key: %s can not be activated (times_activated_max not set).',
-                    $licenseKey
-                ),
-                array('status' => 404)
-            );
+        if ($license->getTimesActivated() !== null) {
+            $timesActivated = absint($license->getTimesActivated());
+        }
+
+        if ($license->getTimesActivatedMax() !== null) {
+            $timesActivatedMax = absint($license->getTimesActivatedMax());
         }
 
         if ($timesActivatedMax && ($timesActivated >= $timesActivatedMax)) {
@@ -661,19 +657,10 @@ class Licenses extends LMFWC_REST_Controller
             );
         }
 
-        // Check if the license key can be activated
-        $timesActivated    = absint($license->getTimesActivated());
-        $timesActivatedMax = absint($license->getTimesActivatedMax());
+        $timesActivated   = null;
 
-        if (!$timesActivatedMax) {
-            return new WP_Error(
-                'lmfwc_rest_data_error',
-                sprintf(
-                    'License Key: %s can not be deactivated (times_activated_max not set).',
-                    $licenseKey
-                ),
-                array('status' => 404)
-            );
+        if ($license->getTimesActivated() !== null) {
+            $timesActivated = absint($license->getTimesActivated());
         }
 
         if (!$timesActivated || $timesActivated == 0) {

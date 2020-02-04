@@ -25,27 +25,47 @@ class Order
      */
     public function __construct()
     {
-        add_action('woocommerce_order_status_completed',               array($this, 'generateOrderLicenses'));
-        add_action('woocommerce_order_action_lmfwc_send_license_keys', array($this, 'processSendLicenseKeysAction'));
-        add_action('woocommerce_order_details_after_order_table',      array($this, 'showBoughtLicenses'),       10, 1);
-        add_filter('woocommerce_order_actions',                        array($this, 'addSendLicenseKeysAction'), 10, 1);
-        add_action('woocommerce_after_order_itemmeta',                 array($this, 'showOrderedLicenses'),      10, 3);
+        add_action('woocommerce_order_status_changed',                 array($this, 'orderStatusChanged'),           10, 3);
+        add_action('woocommerce_order_action_lmfwc_send_license_keys', array($this, 'processSendLicenseKeysAction'), 10, 1);
+        add_action('woocommerce_order_details_after_order_table',      array($this, 'showBoughtLicenses'),           10, 1);
+        add_filter('woocommerce_order_actions',                        array($this, 'addSendLicenseKeysAction'),     10, 1);
+        add_action('woocommerce_after_order_itemmeta',                 array($this, 'showOrderedLicenses'),          10, 3);
     }
 
     /**
      * Generates licenses when an order is set to complete.
      *
-     * @param int $orderId
+     * @param int    $orderId
+     * @param string $oldStatus,
+     * @param string $newStatus
      */
-    public function generateOrderLicenses($orderId)
+    public function orderStatusChanged($orderId, $oldStatus, $newStatus)
     {
+        $orderStatusSettings = Settings::get(
+            'lmfwc_license_key_delivery_options',
+            Settings::SECTION_ORDER_STATUS
+        );
+
+        // The order status settings haven't been configured for the new status
+        if (empty($orderStatusSettings)
+            || !array_key_exists('wc-' . $newStatus, $orderStatusSettings)
+            || !array_key_exists('send', $orderStatusSettings['wc-' . $newStatus])
+        ) {
+            return;
+        }
+
         // Keys have already been generated for this order.
         if (get_post_meta($orderId, 'lmfwc_order_complete')) {
             return;
         }
 
         /** @var WC_Order $order */
-        $order = new WC_Order($orderId);
+        $order = wc_get_order($orderId);
+
+        // The given order does not exist
+        if (!$order) {
+            return;
+        }
 
         /** @var WC_Order_Item $itemData */
         foreach ($order->get_items() as $itemData) {
@@ -53,7 +73,7 @@ class Order
             $product = $itemData->get_product();
 
             // Skip this product because it's not a licensed product.
-            if (!get_post_meta($product->get_id(), 'lmfwc_licensed_product', true)){
+            if (!get_post_meta($product->get_id(), 'lmfwc_licensed_product', true)) {
                 continue;
             }
 
@@ -141,7 +161,7 @@ class Order
                             $generator
                         );
 
-                        // Create a backorder
+                        // TODO: Create a backorder
                     }
                 }
             }

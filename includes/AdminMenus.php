@@ -68,7 +68,7 @@ class AdminMenus
      */
     public function __construct()
     {
-        $this->tabWhitelist = array('general', 'rest_api');
+        $this->tabWhitelist = array('general', 'order_status', 'rest_api');
 
         // Plugin pages.
         add_action('admin_menu', array($this, 'createPluginPages'), 9);
@@ -361,10 +361,11 @@ class AdminMenus
      */
     public function settingsPage()
     {
-        $tab        = $this->getCurrentTab();
-        $section    = $this->getCurrentSection();
-        $urlGeneral = admin_url(sprintf('admin.php?page=%s&tab=general', self::SETTINGS_PAGE));
-        $urlRestApi = admin_url(sprintf('admin.php?page=%s&tab=rest_api', self::SETTINGS_PAGE));
+        $tab            = $this->getCurrentTab();
+        $section        = $this->getCurrentSection();
+        $urlGeneral     = admin_url(sprintf('admin.php?page=%s&tab=general',      self::SETTINGS_PAGE));
+        $urlOrderStatus = admin_url(sprintf('admin.php?page=%s&tab=order_status', self::SETTINGS_PAGE));
+        $urlRestApi     = admin_url(sprintf('admin.php?page=%s&tab=rest_api',     self::SETTINGS_PAGE));
 
         if ($tab == 'rest_api') {
             if (isset($_GET['create_key'])) {
