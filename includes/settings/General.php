@@ -36,7 +36,7 @@ class General
         // Add the settings sections.
         add_settings_section(
             'license_keys_section',
-            __('License keys', 'lmfwc'),
+            __('License keys', 'license-manager-for-woocommerce'),
             null,
             'lmfwc_license_keys'
         );
@@ -44,7 +44,7 @@ class General
         // lmfwc_security section fields.
         add_settings_field(
             'lmfwc_hide_license_keys',
-            __('Obscure licenses', 'lmfwc'),
+            __('Obscure licenses', 'license-manager-for-woocommerce'),
             array($this, 'fieldHideLicenseKeys'),
             'lmfwc_license_keys',
             'license_keys_section'
@@ -52,7 +52,7 @@ class General
 
         add_settings_field(
             'lmfwc_auto_delivery',
-            __('Automatic delivery', 'lmfwc'),
+            __('Automatic delivery', 'license-manager-for-woocommerce'),
             array($this, 'fieldAutoDelivery'),
             'lmfwc_license_keys',
             'license_keys_section'
@@ -64,14 +64,14 @@ class General
         // Add the settings sections.
         add_settings_section(
             'lmfwc_rest_api_section',
-            __('REST API', 'lmfwc'),
+            __('REST API', 'license-manager-for-woocommerce'),
             null,
             'lmfwc_rest_api'
         );
 
         add_settings_field(
             'lmfwc_disable_api_ssl',
-            __('API & SSL', 'lmfwc'),
+            __('API & SSL', 'license-manager-for-woocommerce'),
             array($this, 'fieldEnableApiOnNonSsl'),
             'lmfwc_rest_api',
             'lmfwc_rest_api_section'
@@ -79,7 +79,7 @@ class General
 
         add_settings_field(
             'lmfwc_enabled_api_routes',
-            __('Enable/disable API routes', 'lmfwc'),
+            __('Enable/disable API routes', 'license-manager-for-woocommerce'),
             array($this, 'fieldEnabledApiRoutes'),
             'lmfwc_rest_api',
             'lmfwc_rest_api_section'
@@ -102,11 +102,11 @@ class General
             $field,
             checked(true, $value, false)
         );
-        $html .= sprintf('<span>%s</span>', __('Hide license keys in the admin dashboard.', 'lmfwc'));
+        $html .= sprintf('<span>%s</span>', __('Hide license keys in the admin dashboard.', 'license-manager-for-woocommerce'));
         $html .= '</label>';
         $html .= sprintf(
             '<p class="description">%s</p>',
-            __('All license keys will be hidden and only displayed when the \'Show\' action is clicked.', 'lmfwc')
+            __('All license keys will be hidden and only displayed when the \'Show\' action is clicked.', 'license-manager-for-woocommerce')
         );
         $html .= '</fieldset>';
 
@@ -131,12 +131,12 @@ class General
         );
         $html .= sprintf(
             '<span>%s</span>',
-            __('Automatically send license keys when an order is set to \'Complete\'.', 'lmfwc')
+            __('Automatically send license keys when an order is set to \'Complete\'.', 'license-manager-for-woocommerce')
         );
         $html .= '</label>';
         $html .= sprintf(
             '<p class="description">%s</p>',
-            __('If this setting is off, you must manually send out all license keys for completed orders.', 'lmfwc')
+            __('If this setting is off, you must manually send out all license keys for completed orders.', 'license-manager-for-woocommerce')
         );
         $html .= '</fieldset>';
 
@@ -161,12 +161,12 @@ class General
         );
         $html .= sprintf(
             '<span>%s</span>',
-            __('Enable the plugin API routes over insecure HTTP connections.', 'lmfwc')
+            __('Enable the plugin API routes over insecure HTTP connections.', 'license-manager-for-woocommerce')
         );
         $html .= '</label>';
         $html .= sprintf(
             '<p class="description">%s</p>',
-            __('This should only be activated for development purposes.', 'lmfwc')
+            __('This should only be activated for development purposes.', 'license-manager-for-woocommerce')
         );
         $html .= '</fieldset>';
 
@@ -336,7 +336,7 @@ class General
             if (true === $route['deprecated']) {
                 $html .= sprintf(
                     '<code class="text-info"><b>%s</b></code>',
-                    strtoupper(__('Deprecated', 'lmfwc'))
+                    strtoupper(__('Deprecated', 'license-manager-for-woocommerce'))
                 );
             }
 
@@ -346,9 +346,9 @@ class General
 
         $html .= sprintf(
             '<p class="description">%s %s</p>',
-            __('Please note that the v1 routes are currently being deprecated. This means that, while they are still available to use, they will eventually be removed from the plugin. Please adjust any existing implementations to use the v2 routes.', 'lmfwc'),
+            __('Please note that the v1 routes are currently being deprecated. This means that, while they are still available to use, they will eventually be removed from the plugin. Please adjust any existing implementations to use the v2 routes.', 'license-manager-for-woocommerce'),
             sprintf(
-                __('The complete <b>API documentation</b> can be found <a href="%s" target="_blank" rel="noopener">here</a>.', 'lmfwc'),
+                __('The complete <b>API documentation</b> can be found <a href="%s" target="_blank" rel="noopener">here</a>.', 'license-manager-for-woocommerce'),
                 'https://documenter.getpostman.com/view/6103231/S1ETQGZ1?version=latest'
             )
         );

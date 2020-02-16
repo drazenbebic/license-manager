@@ -63,7 +63,7 @@ class ProductData
     public function simpleProductLicenseManagerTab($tabs)
     {
         $tabs[self::ADMIN_TAB_NAME] = array(
-            'label'    => __('License Manager', 'lmfwc'),
+            'label'    => __('License Manager', 'license-manager-for-woocommerce'),
             'target'   => self::ADMIN_TAB_TARGET,
             'class'    => array('show_if_simple'),
             'priority' => 21
@@ -86,7 +86,7 @@ class ProductData
         $generatorId       = get_post_meta($post->ID, 'lmfwc_licensed_product_assigned_generator', true);
         $useGenerator      = get_post_meta($post->ID, 'lmfwc_licensed_product_use_generator',      true);
         $useStock          = get_post_meta($post->ID, 'lmfwc_licensed_product_use_stock',          true);
-        $generatorOptions  = array('' => __('Please select a generator', 'lmfwc'));
+        $generatorOptions  = array('' => __('Please select a generator', 'license-manager-for-woocommerce'));
 
         if ($generators) {
             /** @var GeneratorResourceModel $generator */
@@ -110,8 +110,8 @@ class ProductData
         woocommerce_wp_checkbox(
             array(
                 'id'          => 'lmfwc_licensed_product',
-                'label'       => __('Sell license keys', 'lmfwc'),
-                'description' => __('Sell license keys for this product', 'lmfwc'),
+                'label'       => __('Sell license keys', 'license-manager-for-woocommerce'),
+                'description' => __('Sell license keys for this product', 'license-manager-for-woocommerce'),
                 'value'       => $licensed,
                 'cbvalue'     => 1,
                 'desc_tip'    => false
@@ -122,9 +122,9 @@ class ProductData
         woocommerce_wp_text_input(
             array(
                 'id'                => 'lmfwc_licensed_product_delivered_quantity',
-                'label'             => __('Delivered quantity', 'lmfwc'),
+                'label'             => __('Delivered quantity', 'license-manager-for-woocommerce'),
                 'value'             => $deliveredQuantity ? $deliveredQuantity : 1,
-                'description'       => __('Defines the amount of license keys to be delivered upon purchase.', 'lmfwc'),
+                'description'       => __('Defines the amount of license keys to be delivered upon purchase.', 'license-manager-for-woocommerce'),
                 'type'              => 'number',
                 'custom_attributes' => array(
                     'step' => 'any',
@@ -139,8 +139,8 @@ class ProductData
         woocommerce_wp_checkbox(
             array(
                 'id'          => 'lmfwc_licensed_product_use_generator',
-                'label'       => __('Generate license keys', 'lmfwc'),
-                'description' => __('Automatically generate license keys with each sold product', 'lmfwc'),
+                'label'       => __('Generate license keys', 'license-manager-for-woocommerce'),
+                'description' => __('Automatically generate license keys with each sold product', 'license-manager-for-woocommerce'),
                 'value'       => $useGenerator,
                 'cbvalue'     => 1,
                 'desc_tip'    => false
@@ -151,7 +151,7 @@ class ProductData
         woocommerce_wp_select(
             array(
                 'id'      => 'lmfwc_licensed_product_assigned_generator',
-                'label'   => __('Assign generator', 'lmfwc'),
+                'label'   => __('Assign generator', 'license-manager-for-woocommerce'),
                 'options' => $generatorOptions,
                 'value'   => $generatorId
             )
@@ -163,8 +163,8 @@ class ProductData
         woocommerce_wp_checkbox(
             array(
                 'id'          => 'lmfwc_licensed_product_use_stock',
-                'label'       => __('Sell from stock', 'lmfwc'),
-                'description' => __('Sell license keys from the available stock.', 'lmfwc'),
+                'label'       => __('Sell from stock', 'license-manager-for-woocommerce'),
+                'description' => __('Sell license keys from the available stock.', 'license-manager-for-woocommerce'),
                 'value'       => $useStock,
                 'cbvalue'     => 1,
                 'desc_tip'    => false
@@ -173,14 +173,14 @@ class ProductData
 
         echo sprintf(
             '<p class="form-field"><label>%s</label><span class="description">%d %s</span></p>',
-            __('Available', 'lmfwc'),
+            __('Available', 'license-manager-for-woocommerce'),
             LicenseResourceRepository::instance()->countBy(
                 array(
                     'product_id' => $post->ID,
                     'status' => LicenseStatus::ACTIVE
                 )
             ),
-            __('License key(s) in stock and available for sale', 'lmfwc')
+            __('License key(s) in stock and available for sale', 'license-manager-for-woocommerce')
         );
 
         echo '</div></div>';
@@ -255,7 +255,7 @@ class ProductData
         if (array_key_exists('lmfwc_licensed_product_use_generator', $_POST)) {
             // You must select a generator if you wish to assign it to the product.
             if (!$_POST['lmfwc_licensed_product_assigned_generator']) {
-                $error = new WP_Error(2, __('Assign a generator if you wish to sell automatically generated licenses for this product.', 'lmfwc'));
+                $error = new WP_Error(2, __('Assign a generator if you wish to sell automatically generated licenses for this product.', 'license-manager-for-woocommerce'));
 
                 set_transient('lmfwc_error', $error, 45);
                 update_post_meta($postId, 'lmfwc_licensed_product_use_generator', 0);
@@ -290,7 +290,7 @@ class ProductData
         $generatorId       = get_post_meta($productId, 'lmfwc_licensed_product_assigned_generator', true);
         $useGenerator      = get_post_meta($productId, 'lmfwc_licensed_product_use_generator',      true);
         $useStock          = get_post_meta($productId, 'lmfwc_licensed_product_use_stock',          true);
-        $generatorOptions  = array('' => __('Please select a generator', 'lmfwc'));
+        $generatorOptions  = array('' => __('Please select a generator', 'license-manager-for-woocommerce'));
 
         /** @var GeneratorResourceModel $generator */
         foreach ($generators as $generator) {
@@ -303,7 +303,7 @@ class ProductData
 
         echo '<div class="panel woocommerce_options_panel" style="width: 100%;"><div class="options_group">';
 
-        echo sprintf('<strong>%s</strong>', __('License Manager for WooCommerce', 'lmfwc'));
+        echo sprintf('<strong>%s</strong>', __('License Manager for WooCommerce', 'license-manager-for-woocommerce'));
 
         echo '<input type="hidden" name="lmfwc_edit_flag" value="true" />';
 
@@ -311,8 +311,8 @@ class ProductData
         woocommerce_wp_checkbox(
             array(
                 'id'          => 'lmfwc_licensed_product',
-                'label'       => __('Sell license key(s)', 'lmfwc'),
-                'description' => __('Sell license keys for this variation', 'lmfwc'),
+                'label'       => __('Sell license key(s)', 'license-manager-for-woocommerce'),
+                'description' => __('Sell license keys for this variation', 'license-manager-for-woocommerce'),
                 'value'       => $licensed,
                 'cbvalue'     => 1,
                 'desc_tip'    => false
@@ -323,9 +323,9 @@ class ProductData
         woocommerce_wp_text_input(
             array(
                 'id'                => 'lmfwc_licensed_product_delivered_quantity',
-                'label'             => __('Delivered quantity', 'lmfwc'),
+                'label'             => __('Delivered quantity', 'license-manager-for-woocommerce'),
                 'value'             => $deliveredQuantity ? $deliveredQuantity : 1,
-                'description'       => __('Defines the amount of license keys to be delivered upon purchase.', 'lmfwc'),
+                'description'       => __('Defines the amount of license keys to be delivered upon purchase.', 'license-manager-for-woocommerce'),
                 'type'              => 'number',
                 'custom_attributes' => array(
                     'step' => 'any',
@@ -340,8 +340,8 @@ class ProductData
         woocommerce_wp_checkbox(
             array(
                 'id'          => 'lmfwc_licensed_product_use_generator',
-                'label'       => __('Generate license keys', 'lmfwc'),
-                'description' => __('Automatically generate license keys with each sold variation', 'lmfwc'),
+                'label'       => __('Generate license keys', 'license-manager-for-woocommerce'),
+                'description' => __('Automatically generate license keys with each sold variation', 'license-manager-for-woocommerce'),
                 'value'       => $useGenerator,
                 'cbvalue'     => 1,
                 'desc_tip'    => false
@@ -352,7 +352,7 @@ class ProductData
         woocommerce_wp_select(
             array(
                 'id'      => 'lmfwc_licensed_product_assigned_generator',
-                'label'   => __('Assign generator', 'lmfwc'),
+                'label'   => __('Assign generator', 'license-manager-for-woocommerce'),
                 'options' => $generatorOptions,
                 'value'   => $generatorId
             )
@@ -364,8 +364,8 @@ class ProductData
         woocommerce_wp_checkbox(
             array(
                 'id'          => 'lmfwc_licensed_product_use_stock',
-                'label'       => __('Sell from stock', 'lmfwc'),
-                'description' => __('Sell license keys from the available stock.', 'lmfwc'),
+                'label'       => __('Sell from stock', 'license-manager-for-woocommerce'),
+                'description' => __('Sell license keys from the available stock.', 'license-manager-for-woocommerce'),
                 'value'       => $useStock,
                 'cbvalue'     => 1,
                 'desc_tip'    => false
@@ -374,14 +374,14 @@ class ProductData
 
         echo sprintf(
             '<p class="form-field"><label>%s</label><span class="description">%d %s</span></p>',
-            __('Available', 'lmfwc'),
+            __('Available', 'license-manager-for-woocommerce'),
             LicenseResourceRepository::instance()->countBy(
                 array(
                     'product_id' => $productId,
                     'status' => LicenseStatus::ACTIVE
                 )
             ),
-            __('License key(s) in stock and available for sale.', 'lmfwc')
+            __('License key(s) in stock and available for sale.', 'license-manager-for-woocommerce')
         );
 
         echo '</div></div>';
@@ -433,7 +433,7 @@ class ProductData
         if (array_key_exists('lmfwc_licensed_product_use_generator', $_POST)) {
             // You must select a generator if you wish to assign it to the product.
             if (!$_POST['lmfwc_licensed_product_assigned_generator']) {
-                $error = new WP_Error(2, __('Assign a generator if you wish to sell automatically generated licenses for this product.', 'lmfwc'));
+                $error = new WP_Error(2, __('Assign a generator if you wish to sell automatically generated licenses for this product.', 'license-manager-for-woocommerce'));
 
                 set_transient('lmfwc_error', $error, 45);
                 update_post_meta($variationId, 'lmfwc_licensed_product_use_generator', 0);

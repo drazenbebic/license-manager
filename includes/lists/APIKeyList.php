@@ -22,8 +22,8 @@ class APIKeyList extends WP_List_Table
     public function __construct() {
         parent::__construct(
             array(
-                'singular' => __('Key', 'lmfwc'),
-                'plural'   => __('Keys', 'lmfwc'),
+                'singular' => __('Key', 'license-manager-for-woocommerce'),
+                'plural'   => __('Keys', 'license-manager-for-woocommerce'),
                 'ajax'     => false
             )
         );
@@ -34,7 +34,7 @@ class APIKeyList extends WP_List_Table
      */
     public function no_items()
     {
-        _e('No keys found.', 'lmfwc');
+        _e('No keys found.', 'license-manager-for-woocommerce');
     }
 
     /**
@@ -46,11 +46,11 @@ class APIKeyList extends WP_List_Table
     {
         return array(
             'cb'            => '<input type="checkbox" />',
-            'title'         => __('Description', 'lmfwc'),
-            'truncated_key' => __('Consumer key ending in', 'lmfwc'),
-            'user'          => __('User', 'lmfwc'),
-            'permissions'   => __('Permissions', 'lmfwc'),
-            'last_access'   => __('Last access', 'lmfwc'),
+            'title'         => __('Description', 'license-manager-for-woocommerce'),
+            'truncated_key' => __('Consumer key ending in', 'license-manager-for-woocommerce'),
+            'user'          => __('User', 'license-manager-for-woocommerce'),
+            'permissions'   => __('Permissions', 'license-manager-for-woocommerce'),
+            'last_access'   => __('Last access', 'license-manager-for-woocommerce'),
         );
     }
 
@@ -89,7 +89,7 @@ class APIKeyList extends WP_List_Table
         }
 
         if (empty($item['description'])) {
-            $output .= esc_html__('API key', 'lmfwc');
+            $output .= esc_html__('API key', 'license-manager-for-woocommerce');
         }
 
         else {
@@ -104,12 +104,12 @@ class APIKeyList extends WP_List_Table
 
         // Get actions.
         $actions = array(
-            'id' => sprintf(__('ID: %d', 'lmfwc'), $keyId),
+            'id' => sprintf(__('ID: %d', 'license-manager-for-woocommerce'), $keyId),
         );
 
         if ($canEdit) {
-            $actions['edit']  = '<a href="' . esc_url($url) . '">' . __('View/Edit', 'lmfwc') . '</a>';
-            $actions['trash'] = '<a class="submitdelete" aria-label="' . esc_attr__('Revoke API key', 'lmfwc') . '" href="' . esc_url(
+            $actions['edit']  = '<a href="' . esc_url($url) . '">' . __('View/Edit', 'license-manager-for-woocommerce') . '</a>';
+            $actions['trash'] = '<a class="submitdelete" aria-label="' . esc_attr__('Revoke API key', 'license-manager-for-woocommerce') . '" href="' . esc_url(
                 wp_nonce_url(
                     add_query_arg(
                         array(
@@ -120,7 +120,7 @@ class APIKeyList extends WP_List_Table
                     ),
                     'revoke'
                 )
-            ) . '">' . esc_html__('Revoke', 'lmfwc') . '</a>';
+            ) . '">' . esc_html__('Revoke', 'license-manager-for-woocommerce') . '</a>';
         }
 
         $rowActions = array();
@@ -179,9 +179,9 @@ class APIKeyList extends WP_List_Table
     {
         $permissionKey = $item['permissions'];
         $permissions = array(
-            'read'       => __('Read', 'lmfwc'),
-            'write'      => __('Write', 'lmfwc'),
-            'read_write' => __('Read/Write', 'lmfwc'),
+            'read'       => __('Read', 'license-manager-for-woocommerce'),
+            'write'      => __('Write', 'license-manager-for-woocommerce'),
+            'read_write' => __('Read/Write', 'license-manager-for-woocommerce'),
         );
 
         if (isset($permissions[$permissionKey])) {
@@ -202,7 +202,7 @@ class APIKeyList extends WP_List_Table
     {
         if (!empty($item['last_access'])) {
             $date = sprintf(
-                __('%1$s at %2$s', 'lmfwc'),
+                __('%1$s at %2$s', 'license-manager-for-woocommerce'),
                 date_i18n(wc_date_format(), strtotime($item['last_access'])),
                 date_i18n(wc_time_format(), strtotime($item['last_access']))
             );
@@ -210,7 +210,7 @@ class APIKeyList extends WP_List_Table
             return apply_filters('woocommerce_api_key_last_access_datetime', $date, $item['last_access']);
         }
 
-        return __('Unknown', 'lmfwc');
+        return __('Unknown', 'license-manager-for-woocommerce');
     }
 
     /**
@@ -225,7 +225,7 @@ class APIKeyList extends WP_List_Table
         }
 
         return array(
-            'revoke' => __('Revoke', 'lmfwc'),
+            'revoke' => __('Revoke', 'license-manager-for-woocommerce'),
         );
     }
 
@@ -352,7 +352,7 @@ class APIKeyList extends WP_List_Table
             !wp_verify_nonce($_REQUEST['_wpnonce'], $nonceAction) &&
             !wp_verify_nonce($_REQUEST['_wpnonce'], 'bulk-' . $this->_args['plural'])
         ) {
-            AdminNotice::error(__('The nonce is invalid or has expired.', 'lmfwc'));
+            AdminNotice::error(__('The nonce is invalid or has expired.', 'license-manager-for-woocommerce'));
             wp_redirect(
                 admin_url(sprintf('admin.php?page=%s', AdminMenus::GENERATORS_PAGE))
             );
@@ -368,7 +368,7 @@ class APIKeyList extends WP_List_Table
     {
         // No ID's were selected, show a warning and redirect
         if (!array_key_exists('key', $_REQUEST)) {
-            $message = sprintf(esc_html__('No API keys were selected.', 'lmfwc'));
+            $message = sprintf(esc_html__('No API keys were selected.', 'license-manager-for-woocommerce'));
             AdminNotice::warning($message);
 
             wp_redirect(
@@ -389,11 +389,11 @@ class APIKeyList extends WP_List_Table
     private function revokeKeys()
     {
         if ($count = ApiKeyResourceRepository::instance()->delete((array)$_REQUEST['key'])) {
-            AdminNotice::success(sprintf(__('%d API key(s) permanently revoked.', 'lmfwc'), $count));
+            AdminNotice::success(sprintf(__('%d API key(s) permanently revoked.', 'license-manager-for-woocommerce'), $count));
         }
 
         else {
-            AdminNotice::error(__('There was a problem revoking the API key(s).', 'lmfwc'));
+            AdminNotice::error(__('There was a problem revoking the API key(s).', 'license-manager-for-woocommerce'));
         }
 
         wp_redirect(sprintf('admin.php?page=%s&tab=rest_api', AdminMenus::SETTINGS_PAGE));

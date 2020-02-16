@@ -23,7 +23,7 @@ use LicenseManagerForWooCommerce\Models\Resources\License as LicenseResourceMode
 
 defined('ABSPATH') || exit; ?>
 
-<h2><?php _e('Your license keys', 'lmfwc'); ?></h2>
+<h2><?php _e('Your license keys', 'license-manager-for-woocommerce'); ?></h2>
 
 <?php foreach ($licenseKeys as $productId => $licenseKeyData): ?>
     <h3 class="product-name">
@@ -35,8 +35,8 @@ defined('ABSPATH') || exit; ?>
     <table class="shop_table shop_table_responsive my_account_orders">
         <thead>
         <tr>
-            <th class="license-key"><?php esc_html_e('License key', 'lmfwc'); ?></th>
-            <th class="valid-until"><?php esc_html_e('Valid until', 'lmfwc'); ?></th>
+            <th class="license-key"><?php esc_html_e('License key', 'license-manager-for-woocommerce'); ?></th>
+            <th class="valid-until"><?php esc_html_e('Valid until', 'license-manager-for-woocommerce'); ?></th>
             <th class="actions"></th>
         </tr>
         </thead>
@@ -57,7 +57,7 @@ defined('ABSPATH') || exit; ?>
                     }
                 ?></td>
                 <td class="license-key-actions">
-                    <a href="<?php echo esc_url($order->get_view_order_url()); ?>" class="button view"><?php esc_html_e('View', 'lmfwc');?></a>
+                    <a href="<?php echo esc_url($order->get_view_order_url()); ?>" class="button view"><?php esc_html_e('View', 'license-manager-for-woocommerce');?></a>
                 </td>
             </tr>
         <?php endforeach; ?>

@@ -38,7 +38,7 @@ class Import
 
         // Validate the file extension
         if (!in_array($ext, array('txt', 'csv')) || !in_array($_FILES['file']['type'], $mimes)) {
-            AdminNotice::error(__('Invalid file type, only TXT and CSV allowed.', 'lmfwc'));
+            AdminNotice::error(__('Invalid file type, only TXT and CSV allowed.', 'license-manager-for-woocommerce'));
 
             wp_redirect(
                 sprintf(
@@ -61,7 +61,7 @@ class Import
 
             // Check for invalid file contents.
             if (!is_array($licenseKeys)) {
-                AdminNotice::error(__('Invalid file content.', 'lmfwc'));
+                AdminNotice::error(__('Invalid file content.', 'license-manager-for-woocommerce'));
 
                 wp_redirect(
                     sprintf(
@@ -100,7 +100,7 @@ class Import
         if (count($duplicateLicenseKeys) > 0) {
             AdminNotice::warning(
                 sprintf(
-                    __('%d license key(s) skipped because they already exist.', 'lmfwc'),
+                    __('%d license key(s) skipped because they already exist.', 'license-manager-for-woocommerce'),
                     count($duplicateLicenseKeys)
                 )
             );

@@ -8,7 +8,7 @@ defined('ABSPATH') || exit;
 
 ?>
 
-<h2><?php esc_html_e('Key details', 'lmfwc');?></h2>
+<h2><?php esc_html_e('Key details', 'license-manager-for-woocommerce');?></h2>
 <hr class="wp-header-end">
 
 <form method="post" action="<?=admin_url('admin-post.php');?>">
@@ -21,7 +21,7 @@ defined('ABSPATH') || exit;
         <tbody>
             <tr scope="row">
                 <th scope="row">
-                    <label for="description"><?php esc_html_e('Description', 'lmfwc');?></label>
+                    <label for="description"><?php esc_html_e('Description', 'license-manager-for-woocommerce');?></label>
                     <span class="text-danger">*</span>
                 </th>
                 <td>
@@ -33,19 +33,19 @@ defined('ABSPATH') || exit;
                         value="<?php echo esc_attr($keyData->getDescription()); ?>"
                     >
                     <p class="description">
-                        <b><?php esc_html_e('Required.', 'lmfwc');?></b>
-                        <span><?php esc_html_e('Friendly name for identifying this key.', 'lmfwc');?></span>
+                        <b><?php esc_html_e('Required.', 'license-manager-for-woocommerce');?></b>
+                        <span><?php esc_html_e('Friendly name for identifying this key.', 'license-manager-for-woocommerce');?></span>
                     </p>
                 </td>
             </tr>
             <tr scope="row">
                 <th scope="row">
-                    <label for="user"><?php esc_html_e('User', 'lmfwc');?></label>
+                    <label for="user"><?php esc_html_e('User', 'license-manager-for-woocommerce');?></label>
                     <span class="text-danger">*</span></label>
                 </th>
                 <td>
                     <select id="user" class="regular-text" name="user">
-                        <option value=""><?php esc_html_e('Please select a user...', 'lmfwc'); ?></option>
+                        <option value=""><?php esc_html_e('Please select a user...', 'license-manager-for-woocommerce'); ?></option>
                         <?php
                             foreach ($users as $user):
                                 $selected = ($userId == $user->ID) ? 'selected="selected"' : '';
@@ -62,14 +62,14 @@ defined('ABSPATH') || exit;
                         ?>
                     </select>
                     <p class="description">
-                        <b><?php esc_html_e('Required.', 'lmfwc');?></b>
-                        <span><?php esc_html_e('Owner of these keys.', 'lmfwc');?></span>
+                        <b><?php esc_html_e('Required.', 'license-manager-for-woocommerce');?></b>
+                        <span><?php esc_html_e('Owner of these keys.', 'license-manager-for-woocommerce');?></span>
                     </p>
                 </td>
             </tr>
             <tr scope="row">
                 <th scope="row">
-                    <label for="permissions"><?php esc_html_e('Permissions', 'lmfwc');?></label>
+                    <label for="permissions"><?php esc_html_e('Permissions', 'license-manager-for-woocommerce');?></label>
                     <span class="text-danger">*</span></label>
                 </th>
                 <td>
@@ -84,15 +84,15 @@ defined('ABSPATH') || exit;
                         <?php endforeach; ?>
                     </select>
                     <p class="description">
-                        <b><?php esc_html_e('Required.', 'lmfwc');?></b>
-                        <span><?php esc_html_e('Select the access type of these keys.', 'lmfwc');?></span>
+                        <b><?php esc_html_e('Required.', 'license-manager-for-woocommerce');?></b>
+                        <span><?php esc_html_e('Select the access type of these keys.', 'license-manager-for-woocommerce');?></span>
                     </p>
                 </td>
             </tr>
             <?php if ($action === 'edit'): ?>
                 <tr scope="row">
                     <th scope="row">
-                        <label><?php esc_html_e('Consumer key ending in', 'lmfwc');?></label>
+                        <label><?php esc_html_e('Consumer key ending in', 'license-manager-for-woocommerce');?></label>
                     </th>
                     <td>
                         <code>&hellip;<?php echo esc_html($keyData->getTruncatedKey()); ?></code>
@@ -100,14 +100,14 @@ defined('ABSPATH') || exit;
                 </tr>
                 <tr scope="row">
                     <th scope="row">
-                        <label><?php esc_html_e('Last access', 'lmfwc');?></label>
+                        <label><?php esc_html_e('Last access', 'license-manager-for-woocommerce');?></label>
                     </th>
                     <td>
                         <?php 
                             if (!empty($keyData->getLastAccess())) {
                                 echo esc_html(apply_filters('woocommerce_api_key_last_access_datetime', $date, $keyData->getLastAccess()));
                             } else {
-                                esc_html_e('Unknown', 'lmfwc');
+                                esc_html_e('Unknown', 'license-manager-for-woocommerce');
                             }
                         ?>
                     </td>
@@ -117,10 +117,10 @@ defined('ABSPATH') || exit;
     </table>
 
     <?php if (0 === intval($keyId)): ?>
-        <?php submit_button(__('Generate API key', 'lmfwc'), 'primary', 'update_api_key'); ?>
+        <?php submit_button(__('Generate API key', 'license-manager-for-woocommerce'), 'primary', 'update_api_key'); ?>
     <?php else: ?>
         <p class="submit">
-            <?php submit_button(__('Save changes', 'lmfwc'), 'primary', 'update_api_key', false); ?>
+            <?php submit_button(__('Save changes', 'license-manager-for-woocommerce'), 'primary', 'update_api_key', false); ?>
             <a
                 style="color: #a00; text-decoration: none; margin-left: 10px;"
                 href="<?php echo esc_url(
@@ -139,7 +139,7 @@ defined('ABSPATH') || exit;
                     )
                 );?>"
             >
-                <span><?php esc_html_e('Revoke key', 'lmfwc'); ?></span>
+                <span><?php esc_html_e('Revoke key', 'license-manager-for-woocommerce'); ?></span>
             </a>
         </p>
     <?php endif; ?>

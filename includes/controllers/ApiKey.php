@@ -31,15 +31,15 @@ class ApiKey
         $error = null;
 
         if (empty($_POST['description'])) {
-            $error = __('Description is missing.', 'lmfwc');
+            $error = __('Description is missing.', 'license-manager-for-woocommerce');
         }
 
         if (empty($_POST['user']) || $_POST['user'] == -1) {
-            $error = __('User is missing.', 'lmfwc');
+            $error = __('User is missing.', 'license-manager-for-woocommerce');
         }
 
         if (empty($_POST['permissions'])) {
-            $error = __('Permissions are missing.', 'lmfwc');
+            $error = __('Permissions are missing.', 'license-manager-for-woocommerce');
         }
 
         $keyId       = absint($_POST['id']);
@@ -56,7 +56,7 @@ class ApiKey
         // Check if current user can edit other users
         if ($userId && !current_user_can('edit_user', $userId)) {
             if (get_current_user_id() !== $userId) {
-                $error = __('You do not have permission to assign API keys to the selected user.', 'lmfwc');
+                $error = __('You do not have permission to assign API keys to the selected user.', 'license-manager-for-woocommerce');
             }
         }
 
@@ -83,13 +83,13 @@ class ApiKey
             );
 
             if ($apiKey) {
-                AdminNotice::success(__('API key generated successfully. Make sure to copy your new keys now as the secret key will be hidden once you leave this page.', 'lmfwc'));
+                AdminNotice::success(__('API key generated successfully. Make sure to copy your new keys now as the secret key will be hidden once you leave this page.', 'license-manager-for-woocommerce'));
                 set_transient('lmfwc_consumer_key', $consumerKey, 60);
                 set_transient('lmfwc_api_key', $apiKey, 60);
             }
 
             else {
-                AdminNotice::error(__('There was a problem generating the API key.', 'lmfwc'));
+                AdminNotice::error(__('There was a problem generating the API key.', 'license-manager-for-woocommerce'));
             }
 
             wp_redirect(sprintf('admin.php?page=%s&tab=rest_api&show_key=1', AdminMenus::SETTINGS_PAGE));
@@ -107,11 +107,11 @@ class ApiKey
             );
 
             if ($apiKey) {
-                AdminNotice::success(__('API key updated successfully.', 'lmfwc'));
+                AdminNotice::success(__('API key updated successfully.', 'license-manager-for-woocommerce'));
             }
 
             else {
-                AdminNotice::error(__('There was a problem updating the API key.', 'lmfwc'));
+                AdminNotice::error(__('There was a problem updating the API key.', 'license-manager-for-woocommerce'));
             }
 
             wp_redirect(sprintf('admin.php?page=%s&tab=rest_api', AdminMenus::SETTINGS_PAGE));

@@ -6,7 +6,7 @@
     /** @var LicenseResourceModel $license */
 ?>
 
-<h1 class="wp-heading-inline"><?php esc_html_e('Edit license key', 'lmfwc'); ?></h1>
+<h1 class="wp-heading-inline"><?php esc_html_e('Edit license key', 'license-manager-for-woocommerce'); ?></h1>
 <hr class="wp-header-end">
 
 <form method="post" action="<?php echo admin_url('admin-post.php');?>">
@@ -17,7 +17,7 @@
     <table class="form-table">
         <tbody>
             <tr scope="row">
-                <th scope="row"><label for="edit__license_id"><?php esc_html_e('ID', 'lmfwc');?></label></th>
+                <th scope="row"><label for="edit__license_id"><?php esc_html_e('ID', 'license-manager-for-woocommerce');?></label></th>
                 <td>
                     <input name="license_id" id="edit__license_id" class="regular-text" type="text" value="<?php echo esc_html($license->getId()); ?>" readonly>
                 </td>
@@ -25,43 +25,43 @@
 
             <!-- LICENSE KEY -->
             <tr scope="row">
-                <th scope="row"><label for="edit__license_key"><?php esc_html_e('License key', 'lmfwc');?></label></th>
+                <th scope="row"><label for="edit__license_key"><?php esc_html_e('License key', 'license-manager-for-woocommerce');?></label></th>
                 <td>
                     <input name="license_key" id="edit__license_key" class="regular-text" type="text" value="<?php echo esc_html($licenseKey); ?>">
-                    <p class="description"><?php esc_html_e('The license key will be encrypted before it is stored inside the database.', 'lmfwc');?></p>
+                    <p class="description"><?php esc_html_e('The license key will be encrypted before it is stored inside the database.', 'license-manager-for-woocommerce');?></p>
                 </td>
             </tr>
 
             <!-- VALID FOR -->
             <tr scope="row">
-                <th scope="row"><label for="edit__valid_for"><?php esc_html_e('Valid for (days)', 'lmfwc');?></label></th>
+                <th scope="row"><label for="edit__valid_for"><?php esc_html_e('Valid for (days)', 'license-manager-for-woocommerce');?></label></th>
                 <td>
                     <input name="valid_for" id="edit__valid_for" class="regular-text" type="text" value="<?php echo esc_html($license->getValidFor()); ?>">
-                    <p class="description"><?php esc_html_e('Number of days for which the license key is valid after purchase. Leave blank if the license key does not expire. Cannot be used at the same time as the "Expires at" field.', 'lmfwc');?></p>
+                    <p class="description"><?php esc_html_e('Number of days for which the license key is valid after purchase. Leave blank if the license key does not expire. Cannot be used at the same time as the "Expires at" field.', 'license-manager-for-woocommerce');?></p>
                 </td>
             </tr>
 
             <!-- EXPIRES AT -->
             <tr scope="row">
-                <th scope="row"><label for="edit__expires_at"><?php esc_html_e('Expires at', 'lmfwc');?></label></th>
+                <th scope="row"><label for="edit__expires_at"><?php esc_html_e('Expires at', 'license-manager-for-woocommerce');?></label></th>
                 <td>
                     <input name="expires_at" id="edit__expires_at" class="regular-text" type="text" value="<?php echo esc_html($expiresAt); ?>">
-                    <p class="description"><?php esc_html_e('The exact date this license key expires on. Leave blank if the license key does not expire. Cannot be used at the same time as the "Valid for (days)" field.', 'lmfwc');?></p>
+                    <p class="description"><?php esc_html_e('The exact date this license key expires on. Leave blank if the license key does not expire. Cannot be used at the same time as the "Valid for (days)" field.', 'license-manager-for-woocommerce');?></p>
                 </td>
             </tr>
 
             <!-- TIMES ACTIVATED MAX -->
             <tr scope="row">
-                <th scope="row"><label for="edit__times_activated_max"><?php esc_html_e('Maximum activation count', 'lmfwc');?></label></th>
+                <th scope="row"><label for="edit__times_activated_max"><?php esc_html_e('Maximum activation count', 'license-manager-for-woocommerce');?></label></th>
                 <td>
                     <input name="times_activated_max" id="edit__times_activated_max" class="regular-text" type="number" value="<?php echo esc_html($license->getTimesActivatedMax()); ?>">
-                    <p class="description"><?php esc_html_e('Define how many times the license key can be marked as "activated" by using the REST API. Leave blank if you do not use the API.', 'lmfwc');?></p>
+                    <p class="description"><?php esc_html_e('Define how many times the license key can be marked as "activated" by using the REST API. Leave blank if you do not use the API.', 'license-manager-for-woocommerce');?></p>
                 </td>
             </tr>
 
             <!-- STATUS -->
             <tr scope="row">
-                <th scope="row"><label for="edit__status"><?php esc_html_e('Status', 'lmfwc');?></label></th>
+                <th scope="row"><label for="edit__status"><?php esc_html_e('Status', 'license-manager-for-woocommerce');?></label></th>
                 <td>
                     <select id="edit__status" name="status" class="regular-text">
                         <?php foreach($statusOptions as $option): ?>
@@ -75,7 +75,7 @@
 
             <!-- ORDER -->
             <tr scope="row">
-                <th scope="row"><label for="edit__order"><?php esc_html_e('Order', 'lmfwc');?></label></th>
+                <th scope="row"><label for="edit__order"><?php esc_html_e('Order', 'license-manager-for-woocommerce');?></label></th>
                 <td>
                     <select name="order_id" id="edit__order" class="regular-text">
                         <?php
@@ -94,13 +94,13 @@
                             }
                         ?>
                     </select>
-                    <p class="description"><?php esc_html_e('The product to which the license keys will be assigned.', 'lmfwc');?></p>
+                    <p class="description"><?php esc_html_e('The product to which the license keys will be assigned.', 'license-manager-for-woocommerce');?></p>
                 </td>
             </tr>
 
             <!-- PRODUCT -->
             <tr scope="row">
-                <th scope="row"><label for="edit__product"><?php esc_html_e('Product', 'lmfwc');?></label></th>
+                <th scope="row"><label for="edit__product"><?php esc_html_e('Product', 'license-manager-for-woocommerce');?></label></th>
                 <td>
                     <select name="product_id" id="edit__product" class="regular-text">
                         <?php
@@ -118,13 +118,13 @@
                             }
                         ?>
                     </select>
-                    <p class="description"><?php esc_html_e('The product to which the license keys will be assigned.', 'lmfwc');?></p>
+                    <p class="description"><?php esc_html_e('The product to which the license keys will be assigned.', 'license-manager-for-woocommerce');?></p>
                 </td>
             </tr>
         </tbody>
     </table>
 
     <p class="submit">
-        <input name="submit" id="edit__submit" class="button button-primary" value="<?php esc_html_e('Save' ,'lmfwc');?>" type="submit">
+        <input name="submit" id="edit__submit" class="button button-primary" value="<?php esc_html_e('Save' ,'license-manager-for-woocommerce');?>" type="submit">
     </p>
 </form>

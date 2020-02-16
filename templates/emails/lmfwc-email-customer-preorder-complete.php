@@ -11,7 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 do_action( 'woocommerce_email_header', $email_heading, $email ); ?>
 
-    <p><?php printf( __( 'The preorder #%d has been fulfilled. Order Details:', 'lmfwc' ), $order->get_order_number() ); ?></p>
+    <p><?php printf( __( 'The preorder #%d has been fulfilled. Order Details:', 'license-manager-for-woocommerce' ), $order->get_order_number() ); ?></p>
 
 <?php
 /**

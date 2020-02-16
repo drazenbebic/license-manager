@@ -102,19 +102,19 @@ abstract class LicenseStatus
         return array(
             array(
                 'value' => self::ACTIVE,
-                'name' => __('Active', 'lmfwc')
+                'name' => __('Active', 'license-manager-for-woocommerce')
             ),
             array(
                 'value' => self::INACTIVE,
-                'name' => __('Inactive', 'lmfwc')
+                'name' => __('Inactive', 'license-manager-for-woocommerce')
             ),
             array(
                 'value' => self::SOLD,
-                'name' => __('Sold', 'lmfwc')
+                'name' => __('Sold', 'license-manager-for-woocommerce')
             ),
             array(
                 'value' => self::DELIVERED,
-                'name' => __('Delivered', 'lmfwc')
+                'name' => __('Delivered', 'license-manager-for-woocommerce')
             )
         );
     }

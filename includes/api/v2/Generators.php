@@ -228,7 +228,7 @@ class Generators extends LMFWC_REST_Controller
         if (!$name) {
             return new WP_Error(
                 'lmfwc_rest_data_error',
-                __('The Generator name is missing from the request.', 'lmfwc'),
+                __('The Generator name is missing from the request.', 'license-manager-for-woocommerce'),
                 array('status' => 404)
             );
         }
@@ -236,7 +236,7 @@ class Generators extends LMFWC_REST_Controller
         if (!$charset) {
             return new WP_Error(
                 'lmfwc_rest_data_error',
-                __('The Generator charset is missing from the request.', 'lmfwc'),
+                __('The Generator charset is missing from the request.', 'license-manager-for-woocommerce'),
                 array('status' => 404)
             );
         }
@@ -244,7 +244,7 @@ class Generators extends LMFWC_REST_Controller
         if (!$chunks) {
             return new WP_Error(
                 'lmfwc_rest_data_error',
-                __('The Generator chunks is missing from the request.', 'lmfwc'),
+                __('The Generator chunks is missing from the request.', 'license-manager-for-woocommerce'),
                 array('status' => 404)
             );
         }
@@ -252,7 +252,7 @@ class Generators extends LMFWC_REST_Controller
         if (!$chunkLength) {
             return new WP_Error(
                 'lmfwc_rest_data_error',
-                __('The Generator chunk length is missing from the request.', 'lmfwc'),
+                __('The Generator chunk length is missing from the request.', 'license-manager-for-woocommerce'),
                 array('status' => 404)
             );
         }
@@ -283,7 +283,7 @@ class Generators extends LMFWC_REST_Controller
         if (!$generator) {
             return new WP_Error(
                 'lmfwc_rest_data_error',
-                __('The Generator could not be added to the database.', 'lmfwc'),
+                __('The Generator could not be added to the database.', 'license-manager-for-woocommerce'),
                 array('status' => 404)
             );
         }
@@ -320,7 +320,7 @@ class Generators extends LMFWC_REST_Controller
         if (!$generatorId) {
             return new WP_Error(
                 'lmfwc_rest_data_error',
-                __('The Generator ID is missing from the request.', 'lmfwc'),
+                __('The Generator ID is missing from the request.', 'license-manager-for-woocommerce'),
                 array('status' => 404)
             );
         }

@@ -47,10 +47,10 @@ class Export
         }
 
         $header = array(
-            'id'          => __('ID', 'lmfwc'),
-            'order_id'    => __('Order ID', 'lmfwc'),
-            'product_id'  => __('Product ID', 'lmfwc'),
-            'license_key' => __('License key', 'lmfwc')
+            'id'          => __('ID', 'license-manager-for-woocommerce'),
+            'order_id'    => __('Order ID', 'license-manager-for-woocommerce'),
+            'product_id'  => __('Product ID', 'license-manager-for-woocommerce'),
+            'license_key' => __('License key', 'license-manager-for-woocommerce')
         );
 
         ob_clean();

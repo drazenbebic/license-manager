@@ -16,19 +16,19 @@ class CustomerPreorderComplete extends WC_Email
     {
         // Email slug we can use to filter other data.
         $this->id          = 'lmfwc_email_customer_preorder_complete';
-        $this->title       = __('Completed preorder', 'lmfwc');
-        $this->description = __('An email sent to the customer when a license key preorder is complete.', 'lmfwc');
+        $this->title       = __('Completed preorder', 'license-manager-for-woocommerce');
+        $this->description = __('An email sent to the customer when a license key preorder is complete.', 'license-manager-for-woocommerce');
 
         // For admin area to let the user know we are sending this email to customers.
         $this->customer_email = true;
-        $this->heading        = __('Preorder complete', 'lmfwc');
+        $this->heading        = __('Preorder complete', 'license-manager-for-woocommerce');
 
         // translators: placeholder is {blogname}, a variable that will be substituted when email is sent out
         $this->subject = sprintf(
             _x(
                 '[%s] - Your preorder has arrived!',
                 'Default email subject for completed pre-order emails sent to the customer',
-                'lmfwc'
+                'license-manager-for-woocommerce'
             ),
             '{blogname}'
         );

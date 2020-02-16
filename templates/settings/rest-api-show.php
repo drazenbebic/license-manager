@@ -8,7 +8,7 @@ defined('ABSPATH') || exit;
 
 ?>
 
-<h2><?php esc_html_e('Key details', 'lmfwc');?></h2>
+<h2><?php esc_html_e('Key details', 'license-manager-for-woocommerce');?></h2>
 <hr class="wp-header-end">
 
 <?php if ($keyData): ?>
@@ -20,7 +20,7 @@ defined('ABSPATH') || exit;
             <tbody>
                 <tr scope="row">
                     <th scope="row">
-                        <label for="consumer_key"><?php esc_html_e('Consumer key', 'lmfwc');?></label>
+                        <label for="consumer_key"><?php esc_html_e('Consumer key', 'license-manager-for-woocommerce');?></label>
                     </th>
                     <td>
                         <input
@@ -35,7 +35,7 @@ defined('ABSPATH') || exit;
                 </tr>
                 <tr scope="row">
                     <th scope="row">
-                        <label for="consumer_secret"><?php esc_html_e('Consumer secret', 'lmfwc');?></label>
+                        <label for="consumer_secret"><?php esc_html_e('Consumer secret', 'license-manager-for-woocommerce');?></label>
                     </th>
                     <td>
                         <input
@@ -67,13 +67,13 @@ defined('ABSPATH') || exit;
                     )
                 );?>"
             >
-                <span><?php esc_html_e('Revoke key', 'lmfwc'); ?></span>
+                <span><?php esc_html_e('Revoke key', 'license-manager-for-woocommerce'); ?></span>
             </a>
         </p>
     </form>
 
 <?php else: ?>
 
-    <div><?php esc_html_e('Nothing to see here...', 'lmfwc'); ?></div>
+    <div><?php esc_html_e('Nothing to see here...', 'license-manager-for-woocommerce'); ?></div>
 
 <?php endif; ?>

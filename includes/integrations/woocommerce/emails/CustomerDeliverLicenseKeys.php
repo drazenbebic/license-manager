@@ -16,19 +16,19 @@ class CustomerDeliverLicenseKeys extends WC_Email
     {
         // Email slug we can use to filter other data.
         $this->id          = 'lmfwc_email_customer_deliver_license_keys';
-        $this->title       = __('Deliver license keys', 'lmfwc');
-        $this->description = __('A manual email to send out license keys to the customer.', 'lmfwc');
+        $this->title       = __('Deliver license keys', 'license-manager-for-woocommerce');
+        $this->description = __('A manual email to send out license keys to the customer.', 'license-manager-for-woocommerce');
 
         // For admin area to let the user know we are sending this email to customers.
         $this->customer_email = true;
-        $this->heading        = __('License key delivery', 'lmfwc');
+        $this->heading        = __('License key delivery', 'license-manager-for-woocommerce');
 
         // translators: placeholder is {blogname}, a variable that will be substituted when email is sent out
         $this->subject = sprintf(
             _x(
                 '[%s] - Your license keys are here!',
                 'Default email subject for resent license key emails sent to the customer',
-                'lmfwc'
+                'license-manager-for-woocommerce'
             ),
             '{blogname}'
         );

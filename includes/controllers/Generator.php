@@ -32,25 +32,25 @@ class Generator
 
         // Validate request.
         if ($_POST['name'] == '' || !is_string($_POST['name'])) {
-            AdminNotice::error(__('Generator name is missing.', 'lmfwc'));
+            AdminNotice::error(__('Generator name is missing.', 'license-manager-for-woocommerce'));
             wp_redirect(admin_url(sprintf('admin.php?page=%s&action=add', AdminMenus::GENERATORS_PAGE)));
             exit();
         }
 
         if ($_POST['charset'] == '' || !is_string($_POST['charset'])) {
-            AdminNotice::error(__('The charset is invalid.', 'lmfwc'));
+            AdminNotice::error(__('The charset is invalid.', 'license-manager-for-woocommerce'));
             wp_redirect(admin_url(sprintf('admin.php?page=%s&action=add', AdminMenus::GENERATORS_PAGE)));
             exit();
         }
 
         if ($_POST['chunks'] == '' || !is_numeric($_POST['chunks'])) {
-            AdminNotice::error(__('Only integer values allowed for chunks.', 'lmfwc'));
+            AdminNotice::error(__('Only integer values allowed for chunks.', 'license-manager-for-woocommerce'));
             wp_redirect(admin_url(sprintf('admin.php?page=%s&action=add', AdminMenus::GENERATORS_PAGE)));
             exit();
         }
 
         if ($_POST['chunk_length'] == '' || !is_numeric($_POST['chunk_length'])) {
-            AdminNotice::error(__('Only integer values allowed for chunk length.', 'lmfwc'));
+            AdminNotice::error(__('Only integer values allowed for chunk length.', 'license-manager-for-woocommerce'));
             wp_redirect(admin_url(sprintf('admin.php?page=%s&action=add', AdminMenus::GENERATORS_PAGE)));
             exit();
         }
@@ -71,11 +71,11 @@ class Generator
         );
 
         if ($generator) {
-            AdminNotice::success(__('The generator was added successfully.', 'lmfwc'));
+            AdminNotice::success(__('The generator was added successfully.', 'license-manager-for-woocommerce'));
         }
 
         else {
-            AdminNotice::error(__('There was a problem adding the generator.', 'lmfwc'));
+            AdminNotice::error(__('There was a problem adding the generator.', 'license-manager-for-woocommerce'));
         }
 
         wp_redirect(admin_url(sprintf('admin.php?page=%s', AdminMenus::GENERATORS_PAGE)));
@@ -94,7 +94,7 @@ class Generator
 
         // Validate request.
         if ($_POST['name'] == '' || !is_string($_POST['name'])) {
-            AdminNotice::error(__('The Generator name is invalid.', 'lmfwc'));
+            AdminNotice::error(__('The Generator name is invalid.', 'license-manager-for-woocommerce'));
             wp_redirect(
                 admin_url(
                     sprintf(
@@ -108,7 +108,7 @@ class Generator
         }
 
         if ($_POST['charset'] == '' || !is_string($_POST['charset'])) {
-            AdminNotice::error(__('The Generator charset is invalid.', 'lmfwc'));
+            AdminNotice::error(__('The Generator charset is invalid.', 'license-manager-for-woocommerce'));
             wp_redirect(
                 admin_url(
                     sprintf(
@@ -122,7 +122,7 @@ class Generator
         }
 
         if ($_POST['chunks'] == '' || !is_numeric($_POST['chunks'])) {
-            AdminNotice::error(__('The Generator chunks are invalid.', 'lmfwc'));
+            AdminNotice::error(__('The Generator chunks are invalid.', 'license-manager-for-woocommerce'));
             wp_redirect(
                 admin_url(
                     sprintf(
@@ -136,7 +136,7 @@ class Generator
         }
 
         if ($_POST['chunk_length'] == '' || !is_numeric($_POST['chunk_length'])) {
-            AdminNotice::error(__('The Generator chunk length is invalid.', 'lmfwc'));
+            AdminNotice::error(__('The Generator chunk length is invalid.', 'license-manager-for-woocommerce'));
             wp_redirect(
                 admin_url(
                     sprintf(
@@ -167,11 +167,11 @@ class Generator
 
         // Redirect according to $result.
         if (!$generator) {
-            AdminNotice::error(__('There was a problem updating the generator.', 'lmfwc'));
+            AdminNotice::error(__('There was a problem updating the generator.', 'license-manager-for-woocommerce'));
         }
 
         else {
-            AdminNotice::success(__('The Generator was updated successfully.', 'lmfwc'));
+            AdminNotice::success(__('The Generator was updated successfully.', 'license-manager-for-woocommerce'));
         }
 
         wp_redirect(admin_url(sprintf('admin.php?page=%s', AdminMenus::GENERATORS_PAGE)));
@@ -205,7 +205,7 @@ class Generator
 
         // Validate request.
         if (!$generator) {
-            AdminNotice::error(__('The chosen generator does not exist.', 'lmfwc'));
+            AdminNotice::error(__('The chosen generator does not exist.', 'license-manager-for-woocommerce'));
 
             wp_redirect(
                 admin_url(
@@ -220,7 +220,7 @@ class Generator
         }
 
         if ($orderId && !wc_get_order($orderId)) {
-            AdminNotice::error(__('The chosen order does not exist.', 'lmfwc'));
+            AdminNotice::error(__('The chosen order does not exist.', 'license-manager-for-woocommerce'));
             wp_redirect(
                 admin_url(
                     sprintf(
@@ -234,7 +234,7 @@ class Generator
         }
 
         if ($productId && !wc_get_product($productId)) {
-            AdminNotice::error(__('The chosen product does not exist.', 'lmfwc'));
+            AdminNotice::error(__('The chosen product does not exist.', 'license-manager-for-woocommerce'));
             wp_redirect(
                 admin_url(
                     sprintf(
@@ -260,7 +260,7 @@ class Generator
         );
 
         // Show message and redirect.
-        AdminNotice::success(sprintf(__('Successfully generated %d license key(s).', 'lmfwc'), $amount));
+        AdminNotice::success(sprintf(__('Successfully generated %d license key(s).', 'license-manager-for-woocommerce'), $amount));
         wp_redirect(admin_url(sprintf('admin.php?page=%s&action=generate', AdminMenus::GENERATORS_PAGE)));
         exit();
     }

@@ -56,8 +56,8 @@ class LicensesList extends WP_List_Table
 
         parent::__construct(
             array(
-                'singular' => __('License key', 'lmfwc'),
-                'plural'   => __('License keys', 'lmfwc'),
+                'singular' => __('License key', 'license-manager-for-woocommerce'),
+                'plural'   => __('License keys', 'license-manager-for-woocommerce'),
                 'ajax'     => false
             )
         );
@@ -85,7 +85,7 @@ class LicensesList extends WP_List_Table
             '<a href="%s" %s>%s <span class="count">(%d)</span></a>',
             $allUrl,
             $class,
-            __('All', 'lmfwc'),
+            __('All', 'license-manager-for-woocommerce'),
             LicenseResourceRepository::instance()->count()
         );
 
@@ -96,7 +96,7 @@ class LicensesList extends WP_List_Table
             '<a href="%s" %s>%s <span class="count">(%d)</span></a>',
             $soldUrl,
             $class,
-            __('Sold', 'lmfwc'),
+            __('Sold', 'license-manager-for-woocommerce'),
             LicenseResourceRepository::instance()->countBy(array('status' => LicenseStatus::SOLD))
         );
 
@@ -107,7 +107,7 @@ class LicensesList extends WP_List_Table
             '<a href="%s" %s>%s <span class="count">(%d)</span></a>',
             $deliveredUrl,
             $class,
-            __('Delivered', 'lmfwc'),
+            __('Delivered', 'license-manager-for-woocommerce'),
             LicenseResourceRepository::instance()->countBy(array('status' => LicenseStatus::DELIVERED))
         );
 
@@ -118,7 +118,7 @@ class LicensesList extends WP_List_Table
             '<a href="%s" %s>%s <span class="count">(%d)</span></a>',
             $activeUrl,
             $class,
-            __('Active', 'lmfwc'),
+            __('Active', 'license-manager-for-woocommerce'),
             LicenseResourceRepository::instance()->countBy(array('status' => LicenseStatus::ACTIVE))
         );
 
@@ -129,7 +129,7 @@ class LicensesList extends WP_List_Table
             '<a href="%s" %s>%s <span class="count">(%d)</span></a>',
             $inactiveUrl,
             $class,
-            __('Inactive', 'lmfwc'),
+            __('Inactive', 'license-manager-for-woocommerce'),
             LicenseResourceRepository::instance()->countBy(array('status' => LicenseStatus::INACTIVE))
         );
 
@@ -147,7 +147,7 @@ class LicensesList extends WP_List_Table
             echo '<div class="alignleft actions">';
             $this->orderDropdown();
             $this->productDropdown();
-            submit_button(__('Filter', 'lmfwc'), '', 'filter-action', false);
+            submit_button(__('Filter', 'license-manager-for-woocommerce'), '', 'filter-action', false);
             echo '</div>';
         }
     }
@@ -187,10 +187,10 @@ class LicensesList extends WP_List_Table
         $selectedOrder = isset($_REQUEST['order-id']) ? $_REQUEST['order-id'] : '';
         ?>
             <label for="filter-by-order-id" class="screen-reader-text">
-                <span><?php _e('Filter by order', 'lmfwc'); ?></span>
+                <span><?php _e('Filter by order', 'license-manager-for-woocommerce'); ?></span>
             </label>
             <select name="order-id" id="filter-by-order-id">
-                <option <?php selected($selectedOrder, ''); ?> value=""><?php _e('All orders', 'lmfwc'); ?></option>
+                <option <?php selected($selectedOrder, ''); ?> value=""><?php _e('All orders', 'license-manager-for-woocommerce'); ?></option>
                 <?php
                 foreach ($orders as $order) {
                     printf(
@@ -243,10 +243,10 @@ class LicensesList extends WP_List_Table
         $selectedProduct = isset($_REQUEST['product-id']) ? $_REQUEST['product-id'] : '';
         ?>
         <label for="filter-by-product-id" class="screen-reader-text">
-            <span><?php _e('Filter by product', 'lmfwc'); ?></span>
+            <span><?php _e('Filter by product', 'license-manager-for-woocommerce'); ?></span>
         </label>
         <select name="product-id" id="filter-by-product-id">
-            <option <?php selected($selectedProduct, ''); ?> value=""><?php _e('All products', 'lmfwc'); ?></option>
+            <option <?php selected($selectedProduct, ''); ?> value=""><?php _e('All products', 'license-manager-for-woocommerce'); ?></option>
             <?php
             foreach ($products as $product) {
                 printf(
@@ -307,7 +307,7 @@ class LicensesList extends WP_List_Table
         }
 
         // ID
-        $actions['id'] = sprintf(__('ID: %d', 'lmfwc'), intval($item['id']));
+        $actions['id'] = sprintf(__('ID: %d', 'license-manager-for-woocommerce'), intval($item['id']));
 
         // Edit
         $actions['edit'] = sprintf(
@@ -322,19 +322,19 @@ class LicensesList extends WP_List_Table
                     'lmfwc_edit_license_key'
                 )
             ),
-            __('Edit', 'lmfwc')
+            __('Edit', 'license-manager-for-woocommerce')
         );
 
         // Hide/Show
         $actions['show'] = sprintf(
             '<a class="lmfwc-license-key-show" data-id="%d">%s</a>',
             $item['id'],
-            __('Show', 'lmfwc')
+            __('Show', 'license-manager-for-woocommerce')
         );
         $actions['hide'] = sprintf(
             '<a class="lmfwc-license-key-hide" data-id="%d">%s</a>',
             $item['id'],
-            __('Hide', 'lmfwc')
+            __('Hide', 'license-manager-for-woocommerce')
         );
 
         // Activate, Deactivate
@@ -352,7 +352,7 @@ class LicensesList extends WP_List_Table
                             wp_create_nonce('activate')
                         )
                     ),
-                    __('Activate', 'lmfwc')
+                    __('Activate', 'license-manager-for-woocommerce')
                 );
             }
 
@@ -367,7 +367,7 @@ class LicensesList extends WP_List_Table
                             wp_create_nonce('deactivate')
                         )
                     ),
-                    __('Deactivate', 'lmfwc')
+                    __('Deactivate', 'license-manager-for-woocommerce')
                 );
             }
         }
@@ -383,7 +383,7 @@ class LicensesList extends WP_List_Table
                     wp_create_nonce('delete')
                 )
             ),
-            __('Delete', 'lmfwc')
+            __('Delete', 'license-manager-for-woocommerce')
         );
 
         return $title . $this->row_actions($actions);
@@ -435,7 +435,7 @@ class LicensesList extends WP_List_Table
                 if ($parent = wc_get_product($parentId)) {
                     $html .= sprintf(
                         '<br><small>%s <a href="%s" target="_blank">#%s - %s</a></small>',
-                        __('Variation of', 'lmfwc'),
+                        __('Variation of', 'license-manager-for-woocommerce'),
                         get_edit_post_link($parent->get_id()),
                         $parent->get_id(),
                         $parent->get_name()
@@ -509,7 +509,7 @@ class LicensesList extends WP_List_Table
 
             $html .= sprintf(
                 '<span>%s <b>%s, %s</b></span>',
-                __('at', 'lmfwc'),
+                __('at', 'license-manager-for-woocommerce'),
                 $date->format($this->dateFormat),
                 $date->format($this->timeFormat)
             );
@@ -523,7 +523,7 @@ class LicensesList extends WP_List_Table
                 if (current_user_can('manage_options')) {
                     $html .= sprintf(
                         '<br>%s <a href="%s">%s</a>',
-                        __('by', 'lmfwc'),
+                        __('by', 'license-manager-for-woocommerce'),
                         get_edit_user_link($user->ID),
                         $user->display_name
                     );
@@ -532,7 +532,7 @@ class LicensesList extends WP_List_Table
                 else {
                     $html .= sprintf(
                         '<br><span>%s %s</span>',
-                        __('by', 'lmfwc'),
+                        __('by', 'license-manager-for-woocommerce'),
                         $user->display_name
                     );
                 }
@@ -562,7 +562,7 @@ class LicensesList extends WP_List_Table
 
             $html .= sprintf(
                 '<span>%s <b>%s, %s</b></span>',
-                __('at', 'lmfwc'),
+                __('at', 'license-manager-for-woocommerce'),
                 $date->format($this->dateFormat),
                 $date->format($this->timeFormat)
             );
@@ -576,7 +576,7 @@ class LicensesList extends WP_List_Table
                 if (current_user_can('manage_options')) {
                     $html .= sprintf(
                         '<br>%s <a href="%s">%s</a>',
-                        __('by', 'lmfwc'),
+                        __('by', 'license-manager-for-woocommerce'),
                         get_edit_user_link($user->ID),
                         $user->display_name
                     );
@@ -585,7 +585,7 @@ class LicensesList extends WP_List_Table
                 else {
                     $html .= sprintf(
                         '<br><span>%s %s</span>',
-                        __('by', 'lmfwc'),
+                        __('by', 'license-manager-for-woocommerce'),
                         $user->display_name
                     );
                 }
@@ -646,8 +646,8 @@ class LicensesList extends WP_List_Table
             $html = sprintf(
                 '<b>%d</b> %s<br><small>%s</small>',
                 intval($item['valid_for']),
-                __('day(s)', 'lmfwc'),
-                __('After purchase', 'lmfwc')
+                __('day(s)', 'license-manager-for-woocommerce'),
+                __('After purchase', 'license-manager-for-woocommerce')
             );
         }
 
@@ -667,31 +667,31 @@ class LicensesList extends WP_List_Table
             case LicenseStatus::SOLD:
                 $status = sprintf(
                     '<div class="lmfwc-status sold"><span class="dashicons dashicons-yes"></span> %s</div>',
-                    __('Sold', 'lmfwc')
+                    __('Sold', 'license-manager-for-woocommerce')
                 );
                 break;
             case LicenseStatus::DELIVERED:
                 $status = sprintf(
                     '<div class="lmfwc-status delivered"><span class="lmfwc-icons delivered"></span> %s</div>',
-                    __('Delivered', 'lmfwc')
+                    __('Delivered', 'license-manager-for-woocommerce')
                 );
                 break;
             case LicenseStatus::ACTIVE:
                 $status = sprintf(
                     '<div class="lmfwc-status active"><span class="dashicons dashicons-marker"></span> %s</div>',
-                    __('Active', 'lmfwc')
+                    __('Active', 'license-manager-for-woocommerce')
                 );
                 break;
             case LicenseStatus::INACTIVE:
                 $status = sprintf(
                     '<div class="lmfwc-status inactive"><span class="dashicons dashicons-marker"></span> %s</div>',
-                    __('Inactive', 'lmfwc')
+                    __('Inactive', 'license-manager-for-woocommerce')
                 );
                 break;
             default:
                 $status = sprintf(
                     '<div class="lmfwc-status unknown">%s</div>',
-                    __('Unknown', 'lmfwc')
+                    __('Unknown', 'license-manager-for-woocommerce')
                 );
                 break;
         }
@@ -741,13 +741,13 @@ class LicensesList extends WP_List_Table
     public function get_bulk_actions()
     {
         $actions = array(
-            'activate'          => __('Activate', 'lmfwc'),
-            'deactivate'        => __('Deactivate', 'lmfwc'),
-            'mark_as_sold'      => __('Mark as sold', 'lmfwc'),
-            'mark_as_delivered' => __('Mark as delivered', 'lmfwc'),
-            'delete'            => __('Delete', 'lmfwc'),
-            'export_csv'        => __('Export (CSV)', 'lmfwc'),
-            'export_pdf'        => __('Export (PDF)', 'lmfwc')
+            'activate'          => __('Activate', 'license-manager-for-woocommerce'),
+            'deactivate'        => __('Deactivate', 'license-manager-for-woocommerce'),
+            'mark_as_sold'      => __('Mark as sold', 'license-manager-for-woocommerce'),
+            'mark_as_delivered' => __('Mark as delivered', 'license-manager-for-woocommerce'),
+            'delete'            => __('Delete', 'license-manager-for-woocommerce'),
+            'export_csv'        => __('Export (CSV)', 'license-manager-for-woocommerce'),
+            'export_pdf'        => __('Export (PDF)', 'license-manager-for-woocommerce')
         );
 
         return $actions;
@@ -890,7 +890,7 @@ class LicensesList extends WP_List_Table
      */
     public function no_items()
     {
-        _e('No license keys found.', 'lmfwc');
+        _e('No license keys found.', 'license-manager-for-woocommerce');
     }
 
     /**
@@ -900,15 +900,15 @@ class LicensesList extends WP_List_Table
     {
         $columns = array(
             'cb'          => '<input type="checkbox" />',
-            'license_key' => __('License key', 'lmfwc'),
-            'order_id'    => __('Order', 'lmfwc'),
-            'product_id'  => __('Product', 'lmfwc'),
-            'activation'  => __('Activation', 'lmfwc'),
-            'expires_at'  => __('Expires at', 'lmfwc'),
-            'valid_for'   => __('Valid for', 'lmfwc'),
-            'status'      => __('Status', 'lmfwc'),
-            'created'     => __('Created', 'lmfwc'),
-            'updated'     => __('Updated', 'lmfwc')
+            'license_key' => __('License key', 'license-manager-for-woocommerce'),
+            'order_id'    => __('Order', 'license-manager-for-woocommerce'),
+            'product_id'  => __('Product', 'license-manager-for-woocommerce'),
+            'activation'  => __('Activation', 'license-manager-for-woocommerce'),
+            'expires_at'  => __('Expires at', 'license-manager-for-woocommerce'),
+            'valid_for'   => __('Valid for', 'license-manager-for-woocommerce'),
+            'status'      => __('Status', 'license-manager-for-woocommerce'),
+            'created'     => __('Created', 'license-manager-for-woocommerce'),
+            'updated'     => __('Updated', 'license-manager-for-woocommerce')
         );
 
         return $columns;
@@ -927,7 +927,7 @@ class LicensesList extends WP_List_Table
         if (!wp_verify_nonce($currentNonce, $nonce)
             && !wp_verify_nonce($currentNonce, 'bulk-' . $this->_args['plural'])
         ) {
-            AdminNotice::error(__('The nonce is invalid or has expired.', 'lmfwc'));
+            AdminNotice::error(__('The nonce is invalid or has expired.', 'license-manager-for-woocommerce'));
             wp_redirect(
                 admin_url(sprintf('admin.php?page=%s', AdminMenus::LICENSES_PAGE))
             );
@@ -943,7 +943,7 @@ class LicensesList extends WP_List_Table
     {
         // No ID's were selected, show a warning and redirect
         if (!array_key_exists('id', $_REQUEST)) {
-            $message = sprintf(esc_html__('No license keys were selected.', 'lmfwc'));
+            $message = sprintf(esc_html__('No license keys were selected.', 'license-manager-for-woocommerce'));
             AdminNotice::warning($message);
 
             wp_redirect(
@@ -991,7 +991,7 @@ class LicensesList extends WP_List_Table
         }
 
         // Set the admin notice, redirect and exit
-        AdminNotice::success(sprintf(esc_html__('%d license key(s) updated successfully.', 'lmfwc'), $count));
+        AdminNotice::success(sprintf(esc_html__('%d license key(s) updated successfully.', 'license-manager-for-woocommerce'), $count));
         wp_redirect(admin_url(sprintf('admin.php?page=%s', AdminMenus::LICENSES_PAGE)));
         exit();
     }
@@ -1008,7 +1008,7 @@ class LicensesList extends WP_List_Table
 
         $result = LicenseResourceRepository::instance()->deleteBy(array('id' => (array)($_REQUEST['id'])));
 
-        $message = sprintf(esc_html__('%d license key(s) permanently deleted.', 'lmfwc'), $result);
+        $message = sprintf(esc_html__('%d license key(s) permanently deleted.', 'license-manager-for-woocommerce'), $result);
 
         // Set the admin notice
         AdminNotice::success($message);

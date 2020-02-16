@@ -11,7 +11,7 @@ defined('ABSPATH') || exit;
 
 ?>
 
-<h1 class="wp-heading-inline"><?php esc_html_e('Generate license keys', 'lmfwc'); ?></h1>
+<h1 class="wp-heading-inline"><?php esc_html_e('Generate license keys', 'license-manager-for-woocommerce'); ?></h1>
 <hr class="wp-header-end">
 
 <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>">
@@ -23,7 +23,7 @@ defined('ABSPATH') || exit;
         <!-- GENERATOR -->
         <tr scope="row">
             <th scope="row">
-                <label for="generate__generator"><?php esc_html_e('Generator', 'lmfwc');?></label>
+                <label for="generate__generator"><?php esc_html_e('Generator', 'license-manager-for-woocommerce');?></label>
                 <span class="text-danger">*</span></label>
             </th>
             <td>
@@ -32,22 +32,22 @@ defined('ABSPATH') || exit;
                         <option value="<?php esc_attr_e($generator->getId()); ?>"><?php esc_attr_e($generator->getName()); ?></option>
                     <?php endforeach; ?>
                 </select>
-                <p class="description"><?php esc_html_e('The selected generator\'s rules will be used to generate the license keys.', 'lmfwc');?></p>
+                <p class="description"><?php esc_html_e('The selected generator\'s rules will be used to generate the license keys.', 'license-manager-for-woocommerce');?></p>
             </td>
         </tr>
 
         <!-- AMOUNT -->
         <tr scope="row">
-            <th scope="row"><label for="generate__amount"><?php esc_html_e('Amount', 'lmfwc');?></label></th>
+            <th scope="row"><label for="generate__amount"><?php esc_html_e('Amount', 'license-manager-for-woocommerce');?></label></th>
             <td>
                 <input name="amount" id="generate__amount" class="regular-text" type="number">
-                <p class="description"><?php esc_html_e('Define how many license keys will be generated.', 'lmfwc');?></p>
+                <p class="description"><?php esc_html_e('Define how many license keys will be generated.', 'license-manager-for-woocommerce');?></p>
             </td>
         </tr>
 
         <!-- STATUS -->
         <tr scope="row">
-            <th scope="row"><label for="edit__status"><?php esc_html_e('Status', 'lmfwc');?></label></th>
+            <th scope="row"><label for="edit__status"><?php esc_html_e('Status', 'license-manager-for-woocommerce');?></label></th>
             <td>
                 <select id="edit__status" name="status" class="regular-text">
                     <?php foreach($statusOptions as $option): ?>
@@ -59,25 +59,25 @@ defined('ABSPATH') || exit;
 
         <!-- ORDER -->
         <tr scope="row">
-            <th scope="row"><label for="generate__order"><?php esc_html_e('Order', 'lmfwc');?></label></th>
+            <th scope="row"><label for="generate__order"><?php esc_html_e('Order', 'license-manager-for-woocommerce');?></label></th>
             <td>
                 <select name="order_id" id="generate__order" class="regular-text"></select>
-                <p class="description"><?php esc_html_e('The order to which the license keys will be assigned.', 'lmfwc');?></p>
+                <p class="description"><?php esc_html_e('The order to which the license keys will be assigned.', 'license-manager-for-woocommerce');?></p>
             </td>
         </tr>
 
         <!-- PRODUCT -->
         <tr scope="row">
-            <th scope="row"><label for="generate__product"><?php esc_html_e('Product', 'lmfwc');?></label></th>
+            <th scope="row"><label for="generate__product"><?php esc_html_e('Product', 'license-manager-for-woocommerce');?></label></th>
             <td>
                 <select name="product_id" id="generate__product" class="regular-text"></select>
-                <p class="description"><?php esc_html_e('The product to which the license keys will be assigned.', 'lmfwc');?></p>
+                <p class="description"><?php esc_html_e('The product to which the license keys will be assigned.', 'license-manager-for-woocommerce');?></p>
             </td>
         </tr>
 
         </tbody>
     </table>
 
-    <?php submit_button(__('Generate', 'lmfwc')); ?>
+    <?php submit_button(__('Generate', 'license-manager-for-woocommerce')); ?>
 
 </form>

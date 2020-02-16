@@ -21,7 +21,7 @@ defined('ABSPATH') || exit; ?>
     echo wp_kses_post(
         sprintf(
             __(
-                '(Order #%s)', 'lmfwc') . ' (<time datetime="%s">%s</time>)',
+                '(Order #%s)', 'license-manager-for-woocommerce') . ' (<time datetime="%s">%s</time>)',
                 $order->get_order_number(),
                 $order->get_date_created()->format('c'),
                 wc_format_datetime($order->get_date_created()
@@ -35,9 +35,9 @@ defined('ABSPATH') || exit; ?>
     <table class="td" cellspacing="0" cellpadding="6" style="width: 100%; font-family: 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif;" border="1">
         <thead>
             <tr>
-                <th class="td" scope="col" style="text-align: left;"><?php esc_html_e('Product', 'lmfwc'); ?></th>
-                <th class="td" scope="col" style="text-align: left;"><?php esc_html_e('Quantity', 'lmfwc'); ?></th>
-                <th class="td" scope="col" style="text-align: left;"><?php esc_html_e('Price', 'lmfwc'); ?></th>
+                <th class="td" scope="col" style="text-align: left;"><?php esc_html_e('Product', 'license-manager-for-woocommerce'); ?></th>
+                <th class="td" scope="col" style="text-align: left;"><?php esc_html_e('Quantity', 'license-manager-for-woocommerce'); ?></th>
+                <th class="td" scope="col" style="text-align: left;"><?php esc_html_e('Price', 'license-manager-for-woocommerce'); ?></th>
             </tr>
         </thead>
         <tbody>
@@ -74,7 +74,7 @@ defined('ABSPATH') || exit; ?>
             if ($order->get_customer_note()) {
                 ?>
                 <tr>
-                    <th class="td" scope="row" colspan="2" style="text-align: left;"><?php esc_html_e('Note', 'lmfwc'); ?>></th>
+                    <th class="td" scope="row" colspan="2" style="text-align: left;"><?php esc_html_e('Note', 'license-manager-for-woocommerce'); ?>></th>
                     <td class="td" style="text-align: left;"><?php echo wp_kses_post(wptexturize($order->get_customer_note())); ?></td>
                 </tr>
                 <?php

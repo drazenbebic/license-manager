@@ -31,8 +31,8 @@ class GeneratorsList extends WP_List_Table
 
         parent::__construct(
             array(
-                'singular' => __('Generator', 'lmfwc'),
-                'plural'   => __('Generators', 'lmfwc'),
+                'singular' => __('Generator', 'license-manager-for-woocommerce'),
+                'plural'   => __('Generators', 'license-manager-for-woocommerce'),
                 'ajax'     => false
             )
         );
@@ -80,7 +80,7 @@ class GeneratorsList extends WP_List_Table
      */
     public function no_items()
     {
-        _e('No generators found.', 'lmfwc');
+        _e('No generators found.', 'license-manager-for-woocommerce');
     }
 
     /**
@@ -111,12 +111,12 @@ class GeneratorsList extends WP_List_Table
         if (count($products) > 0) {
             $title .= sprintf(
                 '<span class="lmfwc-badge info" title="%s">%d</span>',
-                __('Number of products assigned to this generator', 'lmfwc'),
+                __('Number of products assigned to this generator', 'license-manager-for-woocommerce'),
                 count($products)
             );
         }
 
-        $actions['id'] = sprintf(__('ID: %d', 'lmfwc'), intval($item['id']));
+        $actions['id'] = sprintf(__('ID: %d', 'license-manager-for-woocommerce'), intval($item['id']));
 
         if (!apply_filters('lmfwc_get_assigned_products', $item['id'])) {
             $actions['delete'] = sprintf(
@@ -125,7 +125,7 @@ class GeneratorsList extends WP_List_Table
                 'delete',
                 absint($item['id']),
                 wp_create_nonce('delete'),
-                __('Delete', 'lmfwc')
+                __('Delete', 'license-manager-for-woocommerce')
             );
         }
 
@@ -135,7 +135,7 @@ class GeneratorsList extends WP_List_Table
             'edit',
             absint($item['id']),
             wp_create_nonce('edit'),
-            __('Edit', 'lmfwc')
+            __('Edit', 'license-manager-for-woocommerce')
         );
 
         return $title . $this->row_actions($actions);
@@ -228,9 +228,9 @@ class GeneratorsList extends WP_List_Table
             return $expiresIn;
         }
 
-        $expiresIn .= sprintf('%d %s', $item['expires_in'], __('day(s)', 'lmfwc'));
+        $expiresIn .= sprintf('%d %s', $item['expires_in'], __('day(s)', 'license-manager-for-woocommerce'));
         $expiresIn .= '<br>';
-        $expiresIn .= sprintf('<small>%s</small>', __('After purchase', 'lmfwc'));
+        $expiresIn .= sprintf('<small>%s</small>', __('After purchase', 'license-manager-for-woocommerce'));
 
         return $expiresIn;
     }
@@ -255,15 +255,15 @@ class GeneratorsList extends WP_List_Table
     {
         return array(
             'cb'                  => '<input type="checkbox" />',
-            'name'                => __('Name', 'lmfwc'),
-            'charset'             => __('Character map', 'lmfwc'),
-            'chunks'              => __('Number of chunks', 'lmfwc'),
-            'chunk_length'        => __('Chunk length', 'lmfwc'),
-            'times_activated_max' => __('Maximum activation count', 'lmfwc'),
-            'separator'           => __('Separator', 'lmfwc'),
-            'prefix'              => __('Prefix', 'lmfwc'),
-            'suffix'              => __('Suffix', 'lmfwc'),
-            'expires_in'          => __('Expires in', 'lmfwc')
+            'name'                => __('Name', 'license-manager-for-woocommerce'),
+            'charset'             => __('Character map', 'license-manager-for-woocommerce'),
+            'chunks'              => __('Number of chunks', 'license-manager-for-woocommerce'),
+            'chunk_length'        => __('Chunk length', 'license-manager-for-woocommerce'),
+            'times_activated_max' => __('Maximum activation count', 'license-manager-for-woocommerce'),
+            'separator'           => __('Separator', 'license-manager-for-woocommerce'),
+            'prefix'              => __('Prefix', 'license-manager-for-woocommerce'),
+            'suffix'              => __('Suffix', 'license-manager-for-woocommerce'),
+            'expires_in'          => __('Expires in', 'license-manager-for-woocommerce')
         );
     }
 
@@ -292,7 +292,7 @@ class GeneratorsList extends WP_List_Table
     public function get_bulk_actions()
     {
         $actions = array(
-            'delete' => __('Delete', 'lmfwc'),
+            'delete' => __('Delete', 'license-manager-for-woocommerce'),
         );
 
         return $actions;
@@ -356,7 +356,7 @@ class GeneratorsList extends WP_List_Table
         if (!wp_verify_nonce($_REQUEST['_wpnonce'], $nonceAction) &&
             !wp_verify_nonce($_REQUEST['_wpnonce'], 'bulk-' . $this->_args['plural'])
         ) {
-            AdminNotice::error(__('The nonce is invalid or has expired.', 'lmfwc'));
+            AdminNotice::error(__('The nonce is invalid or has expired.', 'license-manager-for-woocommerce'));
             wp_redirect(admin_url(sprintf('admin.php?page=%s', AdminMenus::GENERATORS_PAGE)));
 
             exit();
@@ -370,7 +370,7 @@ class GeneratorsList extends WP_List_Table
     {
         // No ID's were selected, show a warning and redirect
         if (!array_key_exists('id', $_REQUEST)) {
-            $message = sprintf(esc_html__('No generators were selected.', 'lmfwc'));
+            $message = sprintf(esc_html__('No generators were selected.', 'license-manager-for-woocommerce'));
             AdminNotice::warning($message);
 
             wp_redirect(
@@ -404,7 +404,7 @@ class GeneratorsList extends WP_List_Table
         $result = GeneratorResourceRepository::instance()->delete($generatorsToDelete);
 
         if ($result) {
-            AdminNotice::success(sprintf(__('%d generator(s) permanently deleted.', 'lmfwc'), $result));
+            AdminNotice::success(sprintf(__('%d generator(s) permanently deleted.', 'license-manager-for-woocommerce'), $result));
 
             wp_redirect(
                 admin_url(
@@ -414,7 +414,7 @@ class GeneratorsList extends WP_List_Table
         }
 
         else {
-            AdminNotice::error(__('There was a problem deleting the generators.', 'lmfwc'));
+            AdminNotice::error(__('There was a problem deleting the generators.', 'license-manager-for-woocommerce'));
 
             wp_redirect(
                 admin_url(
