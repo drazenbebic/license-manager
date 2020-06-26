@@ -19,20 +19,15 @@ defined('ABSPATH') || exit;
  */
 function lmfwc_duplicate($licenseKey, $licenseKeyId = null)
 {
-    $duplicate = false;
-    $hash      = apply_filters('lmfwc_hash', $licenseKey);
+    $hash = apply_filters('lmfwc_hash', $licenseKey);
 
-    // Add action
     if ($licenseKeyId === null) {
         $query = array('hash' => $hash);
 
         if (LicenseResourceRepository::instance()->findBy($query)) {
-            $duplicate = true;
+            return true;
         }
-    }
-
-    // Update action
-    elseif ($licenseKeyId !== null && is_numeric($licenseKeyId)) {
+    } elseif ($licenseKeyId !== null && is_numeric($licenseKeyId)) {
         $table = LicenseResourceRepository::instance()->getTable();
 
         $query = "
@@ -41,18 +36,16 @@ function lmfwc_duplicate($licenseKey, $licenseKeyId = null)
             FROM
                 {$table}
             WHERE
-                1=1
-                AND hash = '{$hash}'
+                hash = '{$hash}'
                 AND id NOT LIKE {$licenseKeyId}
             ;
         ";
 
         if (LicenseResourceRepository::instance()->query($query)) {
-            $duplicate = true;
+            return true;
         }
     }
-
-    return $duplicate;
+    return false;
 }
 add_filter('lmfwc_duplicate', 'lmfwc_duplicate', 10, 2);
 
