@@ -89,8 +89,9 @@ defined('ABSPATH') || exit; ?>
                             <button class="button" type="submit"><?php _e('Deactivate', 'license-manager-for-woocommerce');?></button>
                         </form>
                     <?php endif; ?>
-
-                    <a href="<?php echo esc_url($order->get_view_order_url()); ?>" class="button view"><?php _e('Order', 'license-manager-for-woocommerce');?></a>
+                        <form method="get" style="display: inline-block; margin: 0;" action="<?php echo esc_url($order->get_view_order_url()); ?>">
+                            <button class="button" type="submit"><?php _e('Order', 'license-manager-for-woocommerce');?></button>
+                        </form>
                 </td>
             </tr>
         <?php endforeach; ?>
