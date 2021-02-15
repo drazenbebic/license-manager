@@ -22,7 +22,7 @@ class RestController extends WP_REST_Controller
      *
      * @return WP_REST_Response
      */
-    protected function response($success, $data, $code = 200, $route)
+    protected function response($success, $data, $route, $code = 200)
     {
         return new WP_REST_Response(
             array(
