@@ -164,7 +164,7 @@ class Generators extends LMFWC_REST_Controller
             $response[] = $generator->toArray();
         }
 
-        return $this->response(true, $response, 200, 'v2/generators');
+        return $this->response(true, $response, 'v2/generators');
     }
 
     /**
@@ -222,7 +222,7 @@ class Generators extends LMFWC_REST_Controller
             );
         }
 
-        return $this->response(true, $generator->toArray(), 200, 'v2/generators/{id}');
+        return $this->response(true, $generator->toArray(), 'v2/generators/{id}');
     }
 
     /**
@@ -323,7 +323,7 @@ class Generators extends LMFWC_REST_Controller
             );
         }
 
-        return $this->response(true, $generator->toArray(), 200, 'v2/generators');
+        return $this->response(true, $generator->toArray(), 'v2/generators');
     }
 
     /**
@@ -433,6 +433,6 @@ class Generators extends LMFWC_REST_Controller
             );
         }
 
-        return $this->response(true, $updatedGenerator->toArray(), 200, 'v2/generators/{id}');
+        return $this->response(true, $updatedGenerator->toArray(), 'v2/generators/{id}');
     }
 }
