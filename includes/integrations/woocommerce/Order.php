@@ -67,7 +67,7 @@ class Order
     public function generateOrderLicenses($orderId)
     {
         // Keys have already been generated for this order.
-        if (get_post_meta($orderId, 'lmfwc_order_complete')) {
+        if (lmfwc_is_order_complete($orderId)) {
             return;
         }
 
@@ -85,14 +85,23 @@ class Order
             $product = $orderItem->get_product();
 
             // Skip this product because it's not a licensed product.
-            if (!get_post_meta($product->get_id(), 'lmfwc_licensed_product', true)) {
+            if (!lmfwc_is_licensed_product($product->get_id())) {
+                continue;
+            }
+
+            // Instead of generating new license keys, the plugin will extend
+            // the expiration date of existing licenses, if configured.
+            $abortEarly = apply_filters('lmfwc_maybe_skip_subscription_renewals', $orderId, $product->get_id());
+
+            if ($abortEarly === true) {
                 continue;
             }
 
             $useStock = get_post_meta($product->get_id(), 'lmfwc_licensed_product_use_stock', true);
             $useGenerator = get_post_meta($product->get_id(), 'lmfwc_licensed_product_use_generator', true);
 
-            // Skip this product because neither selling from stock or from generators is active.
+            // Skip this product because neither selling from stock or from
+            // generators is active.
             if (!$useStock && !$useGenerator) {
                 continue;
             }
@@ -254,32 +263,32 @@ class Order
     public function showBoughtLicenses($order)
     {
         // Return if the order isn't complete.
-        if ($order->get_status() != 'completed'
-            && !get_post_meta($order->get_id(), 'lmfwc_order_complete')
-        ) {
+        if ($order->get_status() !== 'completed' && !lmfwc_is_order_complete($order->get_id())) {
             return;
         }
 
-        $data = apply_filters('lmfwc_get_customer_license_keys', $order);
+        $args = array(
+            'order' => $order,
+            'data'  => null
+        );
 
-        // No license keys found, nothing to do.
-        if (!$data) {
+        $customerLicenseKeys = apply_filters('lmfwc_get_customer_license_keys', $args);
+
+        if (!$customerLicenseKeys['data']) {
             return;
         }
 
         // Add missing style.
-        if (!wp_style_is('lmfwc_admin_css', $list = 'enqueued' )) {
+        if (!wp_style_is('lmfwc_admin_css', 'enqueued' )) {
             wp_enqueue_style('lmfwc_admin_css', LMFWC_CSS_URL . 'main.css');
         }
 
         echo wc_get_template_html(
-            'myaccount/lmfwc-license-keys.php',
+            'myaccount/lmfwc-order-licenses.php',
             array(
-                'heading'       => apply_filters('lmfwc_license_keys_table_heading', null),
-                'valid_until'   => apply_filters('lmfwc_license_keys_table_valid_until', null),
-                'data'          => $data,
-                'date_format'   => get_option('date_format'),
-                'args'          => apply_filters('lmfwc_template_args_myaccount_license_keys', array())
+                'order'       => $order,
+                'data'        => $customerLicenseKeys['data'],
+                'date_format' => get_option('date_format')
             ),
             '',
             LMFWC_TEMPLATES_DIR
@@ -341,7 +350,6 @@ class Order
         $html .= '<ul class="lmfwc-license-list">';
 
         if (!Settings::get('lmfwc_hide_license_keys')) {
-            /** @var LicenseResourceModel $license */
             foreach ($licenses as $license) {
                 $html .= sprintf(
                     '<li></span> <code class="lmfwc-placeholder">%s</code></li>',
@@ -355,7 +363,6 @@ class Order
         }
 
         else {
-            /** @var LicenseResourceModel $license */
             foreach ($licenses as $license) {
                 $html .= sprintf(
                     '<li><code class="lmfwc-placeholder empty" data-id="%d"></code></li>',

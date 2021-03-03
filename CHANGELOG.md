@@ -1,3 +1,25 @@
+#### 2.3.0 - 2021-02-14
+* Update - WordPress 5.6 compatibility
+* Update - WooCommerce 5.0 compatibility
+* Add - WooCommerce Subscriptions support. You can now extend existing licenses upon renewal for subscriptions.
+* Add - Extend Subscription licenses by the subscription interval, or a custom interval.
+* Add - Product management feature. This feature allows you to manage licenses and serve updates for WordPress plugins/themes via WooCommerce products and the REST API. Can be turned on/off via the settings.
+* Add - API routes for product management feature: `/products/update` and `/products/download/latest`
+* Add - `license_manager` and `licensing_agent` user roles with custom capabilities. The license manager user role is used for giving users access to the plugin, while the licensing agent is a low-level user designed for API key holders (as they only have permission do perform plugin related REST API calls).
+* Add - Route for generating licenses using a generator: `/generators/{generatorId}/generate`
+* Add - Generator functions: `lmfwc_add_generator()`, `lmfwc_get_generator()`, `lmfwc_get_generators()`, `lmfwc_update_generator()`, `lmfwc_delete_generator()`, and `lmfwc_use_generator()`
+* Add - composer.json file to the root of the project directory. Please note that the plugin was NOT added to the composer repository.
+* Add - Plain text email templates and support.
+* Add - `Disabled` license key status. When license keys are set as disabled, they can no longer be activated via the REST API.
+* Tweak - Reworked "Licenses" endpoint in "My account".
+* Tweak - Reworked all email templates.
+* Tweak - Moved the "Licenses" endpoint settings into the WooCommerce endpoint settings.
+* Tweak - Major code refactoring.
+* Tweak - Changes to the `lmfwc_rest_api_pre_response` filter. Now the `data` parameter comes first, with a total of 3 parameters: `($data, $requestMethod, $route)`
+* Fix - PHP error when editing a generator who is assigned to a deleted WooCommerce product no longer appears.
+* Fix - User licenses now properly show inside "My account - Licenses"
+* Fix - `times_activated_max` is now properly set to `null` instead of `0` when generating a new license.
+
 ##### 2.2.1 - 2020-10-03
 * Update - WordPress 5.5 compatibility
 * Update - WooCommerce 4.5 compatibility

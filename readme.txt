@@ -3,8 +3,8 @@ Contributors: drazenbebic
 Donate link: https://www.licensemanager.at/donate/
 Tags: license key, license, key, software license, serial key, manager, woocommerce, wordpress
 Requires at least: 4.7
-Tested up to: 5.5
-Stable tag: 2.2.1
+Tested up to: 5.6
+Stable tag: 2.3.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 

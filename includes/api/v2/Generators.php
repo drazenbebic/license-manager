@@ -150,7 +150,7 @@ class Generators extends LMFWC_REST_Controller
             return $this->routeDisabledError();
         }
 
-        if (!$this->permissionCheck('generator', 'read')) {
+        if (!$this->capabilityCheck('read_generators')) {
             return new WP_Error(
                 'lmfwc_rest_cannot_view',
                 __('Sorry, you cannot list resources.', 'license-manager-for-woocommerce'),
@@ -203,7 +203,7 @@ class Generators extends LMFWC_REST_Controller
             return $this->routeDisabledError();
         }
 
-        if (!$this->permissionCheck('generator', 'read')) {
+        if (!$this->capabilityCheck('read_generator')) {
             return new WP_Error(
                 'lmfwc_rest_cannot_view',
                 __('Sorry, you cannot view this resource.', 'license-manager-for-woocommerce'),
@@ -261,7 +261,7 @@ class Generators extends LMFWC_REST_Controller
             return $this->routeDisabledError();
         }
 
-        if (!$this->permissionCheck('generator', 'create')) {
+        if (!$this->capabilityCheck('create_generator')) {
             return new WP_Error(
                 'lmfwc_rest_cannot_create',
                 __('Sorry, you are not allowed to create resources.', 'license-manager-for-woocommerce'),
@@ -362,7 +362,7 @@ class Generators extends LMFWC_REST_Controller
             return $this->routeDisabledError();
         }
 
-        if (!$this->permissionCheck('generator', 'edit')) {
+        if (!$this->capabilityCheck('edit_generator')) {
             return new WP_Error(
                 'lmfwc_rest_cannot_edit',
                 __('Sorry, you are not allowed to edit resources.', 'license-manager-for-woocommerce'),
@@ -472,7 +472,7 @@ class Generators extends LMFWC_REST_Controller
             return $this->routeDisabledError();
         }
 
-        if (!$this->permissionCheck('license', 'create')) {
+        if (!$this->capabilityCheck('use_generator')) {
             return new WP_Error(
                 'lmfwc_rest_cannot_create',
                 __('Sorry, you are not allowed to create resources.', 'license-manager-for-woocommerce'),

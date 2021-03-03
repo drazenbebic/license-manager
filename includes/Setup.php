@@ -5,12 +5,18 @@ namespace LicenseManagerForWooCommerce;
 use Defuse\Crypto\Exception\EnvironmentIsBrokenException;
 use Defuse\Crypto\Key as DefuseCryptoKey;
 use Exception;
+use WP_Roles;
 use function dbDelta;
 
 defined('ABSPATH') || exit;
 
 class Setup
 {
+    /**
+     * @var int
+     */
+    const DB_VERSION = 109;
+
     /**
      * @var string
      */
@@ -32,11 +38,6 @@ class Setup
     const LICENSE_META_TABLE_NAME = 'lmfwc_licenses_meta';
 
     /**
-     * @var int
-     */
-    const DB_VERSION = 107;
-
-    /**
      * Installation script.
      *
      * @throws EnvironmentIsBrokenException
@@ -48,8 +49,7 @@ class Setup
         self::createTables();
         self::setDefaultFilesAndFolders();
         self::setDefaultSettings();
-
-        flush_rewrite_rules();
+        self::createRoles();
     }
 
     /**
@@ -78,9 +78,13 @@ class Setup
             $wpdb->query("DROP TABLE IF EXISTS {$table}");
         }
 
-        delete_option('lmfwc_settings_general');
-        delete_option('lmfwc_settings_order_status');
-        delete_option('lmfwc_settings_tools');
+        self::removeRoles();
+
+        foreach (self::getDefaultSettings() as $group => $setting) {
+            delete_option($group);
+        }
+
+        // After cleanup remove version reference
         delete_option('lmfwc_db_version');
     }
 
@@ -306,69 +310,275 @@ class Setup
      */
     public static function setDefaultSettings()
     {
-        $defaultSettingsGeneral = array(
-            'lmfwc_hide_license_keys' => 0,
-            'lmfwc_auto_delivery' => 1,
-            'lmfwc_product_downloads' => 1,
-            'lmfwc_download_expires' => 1,
-            'lmfwc_disable_api_ssl' => 0,
-            'lmfwc_enabled_api_routes' => array(
-                '000' => '1',
-                '001' => '1',
-                '002' => '1',
-                '003' => '1',
-                '004' => '1',
-                '005' => '1',
-                '006' => '1',
-                '007' => '1',
-                '008' => '1',
-                '009' => '1',
-                '010' => '1',
-                '011' => '1',
-                '012' => '1',
-                '013' => '1',
-                '014' => '1',
-                '015' => '1',
-                '016' => '1',
-                '017' => '1',
-                '018' => '1',
-                '019' => '1',
-                '020' => '1',
-                '021' => '1',
-                '022' => '1',
-                '023' => '1'
-            )
-        );
-        $defaultSettingsOrderStatus = array(
-            'lmfwc_license_key_delivery_options' => array(
-                'wc-completed' => array(
-                    'send' => '1'
+        // Only update user settings if they don't exist already
+        foreach (self::getDefaultSettings() as $group => $setting) {
+            if (!get_option($group, false)) {
+                update_option($group, $setting);
+            }
+        }
+
+        // Database version is always updated
+        update_option('lmfwc_db_version', self::DB_VERSION);
+    }
+
+    /**
+     * Returns an associative array of the default plugin settings. The key
+     * represents the setting group, and the value the individual settings
+     * fields with their corresponding values.
+     *
+     * @return array
+     */
+    public static function getDefaultSettings()
+    {
+        return array(
+            'lmfwc_settings_general' => array(
+                'lmfwc_hide_license_keys'         => '1',
+                'lmfwc_auto_delivery'             => '1',
+                'lmfwc_product_downloads'         => '1',
+                'lmfwc_download_expires'          => '1',
+                'lmfwc_allow_duplicates'          => '0',
+                'lmfwc_enable_stock_manager'      => '0',
+                'lmfwc_allow_users_to_activate'   => '0',
+                'lmfwc_allow_users_to_deactivate' => '0',
+                'lmfwc_disable_api_ssl'           => '0',
+                'lmfwc_enabled_api_routes'        => array(
+                    '010' => '1',
+                    '011' => '1',
+                    '012' => '1',
+                    '013' => '1',
+                    '014' => '1',
+                    '015' => '1',
+                    '016' => '1',
+                    '017' => '1',
+                    '018' => '1',
+                    '019' => '1',
+                    '020' => '1',
+                    '021' => '1',
+                    '022' => '1',
+                    '023' => '1'
                 )
-            )
+            ),
+            'lmfwc_settings_order_status' => array(
+                'lmfwc_license_key_delivery_options' => array(
+                    'wc-completed' => array(
+                        'send' => '1'
+                    )
+                )
+            ),
+            'lmfwc_settings_tools' => array(
+                'lmfwc_csv_export_columns' => array(
+                    'id'                  => '1',
+                    'order_id'            => '1',
+                    'product_id'          => '1',
+                    'user_id'             => '1',
+                    'license_key'         => '1',
+                    'expires_at'          => '1',
+                    'valid_for'           => '1',
+                    'status'              => '1',
+                    'times_activated'     => '1',
+                    'times_activated_max' => '1',
+                    'created_at'          => '1',
+                    'created_by'          => '1',
+                    'updated_at'          => '1',
+                    'updated_by'          => '1',
+                )
+            ),
+            'woocommerce_myaccount_licenses_endpoint' => 'licenses'
         );
-        $defaultSettingsTools = array(
-            'lmfwc_csv_export_columns' => array(
-                'id'                  => '1',
-                'order_id'            => '1',
-                'product_id'          => '1',
-                'user_id'             => '1',
-                'license_key'         => '1',
-                'expires_at'          => '1',
-                'valid_for'           => '1',
-                'status'              => '1',
-                'times_activated'     => '1',
-                'times_activated_max' => '1',
-                'created_at'          => '1',
-                'created_by'          => '1',
-                'updated_at'          => '1',
-                'updated_by'          => '1',
+    }
+
+    /**
+     * Add License Manager for WooCommerce roles.
+     */
+    public static function createRoles()
+    {
+        global $wp_roles;
+
+        if (!class_exists('\WP_Roles')) {
+            return;
+        }
+
+        if (!isset($wp_roles)) {
+            $wp_roles = new WP_Roles();
+        }
+
+        // Dummy gettext calls to get strings in the catalog.
+        /* translators: user role */
+        _x('Licensing agent', 'User role', 'license-manager-for-woocommerce');
+        /* translators: user role */
+        _x('License manager', 'User role', 'license-manager-for-woocommerce');
+
+        // Licensing agent role.
+        add_role(
+            'licensing_agent',
+            'Licensing agent',
+            array()
+        );
+
+        // Shop manager role.
+        add_role(
+            'license_manager',
+            'License manager',
+            array(
+                'level_9'                => true,
+                'level_8'                => true,
+                'level_7'                => true,
+                'level_6'                => true,
+                'level_5'                => true,
+                'level_4'                => true,
+                'level_3'                => true,
+                'level_2'                => true,
+                'level_1'                => true,
+                'level_0'                => true,
+                'read'                   => true,
+                'read_private_pages'     => true,
+                'read_private_posts'     => true,
+                'edit_posts'             => true,
+                'edit_pages'             => true,
+                'edit_published_posts'   => true,
+                'edit_published_pages'   => true,
+                'edit_private_pages'     => true,
+                'edit_private_posts'     => true,
+                'edit_others_posts'      => true,
+                'edit_others_pages'      => true,
+                'publish_posts'          => true,
+                'publish_pages'          => true,
+                'delete_posts'           => true,
+                'delete_pages'           => true,
+                'delete_private_pages'   => true,
+                'delete_private_posts'   => true,
+                'delete_published_pages' => true,
+                'delete_published_posts' => true,
+                'delete_others_posts'    => true,
+                'delete_others_pages'    => true,
+                'manage_categories'      => true,
+                'manage_links'           => true,
+                'moderate_comments'      => true,
+                'upload_files'           => true,
+                'export'                 => true,
+                'import'                 => true,
+                'list_users'             => true,
+                'edit_theme_options'     => true,
             )
         );
 
-        // The defaults for the Setting API.
-        update_option('lmfwc_settings_general', $defaultSettingsGeneral);
-        update_option('lmfwc_settings_order_status', $defaultSettingsOrderStatus);
-        update_option('lmfwc_settings_tools', $defaultSettingsTools);
-        update_option('lmfwc_db_version', self::DB_VERSION);
+        foreach (self::getRestApiCapabilities() as $capGroup) {
+            foreach ($capGroup as $cap) {
+                $wp_roles->add_cap('licensing_agent', $cap);
+                $wp_roles->add_cap('administrator', $cap);
+            }
+        }
+
+        foreach (self::getCoreCapabilities() as $capGroup) {
+            foreach ($capGroup as $cap) {
+                $wp_roles->add_cap('license_manager', $cap);
+                $wp_roles->add_cap('administrator', $cap);
+            }
+        }
+    }
+
+    /**
+     * Remove License Manager for WooCommerce roles
+     */
+    public static function removeRoles()
+    {
+        global $wp_roles;
+
+        if (!class_exists('\WP_Roles')) {
+            return;
+        }
+
+        if (!isset($wp_roles)) {
+            $wp_roles = new WP_Roles();
+        }
+
+        foreach (self::getRestApiCapabilities() as $capGroup) {
+            foreach ($capGroup as $cap) {
+                $wp_roles->remove_cap('licensing_agent', $cap);
+                $wp_roles->remove_cap('administrator', $cap);
+            }
+        }
+
+        foreach (self::getCoreCapabilities() as $capGroup) {
+            foreach ($capGroup as $cap) {
+                $wp_roles->remove_cap('license_manager', $cap);
+                $wp_roles->remove_cap('administrator', $cap);
+            }
+        }
+
+        remove_role('licensing_agent');
+        remove_role('license_manager');
+    }
+
+    /**
+     * Returns the plugin's core capabilities.
+     *
+     * @return array
+     */
+    public static function getCoreCapabilities()
+    {
+        $capabilities = array();
+
+        $capabilities['core'] = array(
+            'manage_license_manager_for_woocommerce'
+        );
+
+        $capabilities['licensing'] = array(
+            'activate_license' => true,
+            'deactivate_license' => true,
+            'validate_license' => true
+        );
+
+        $capabilityTypes = array('license', 'generator', 'rest_api_key');
+
+        foreach ($capabilityTypes as $capabilityType) {
+            $capabilities[$capabilityType] = array(
+                "create_{$capabilityType}",
+                "edit_{$capabilityType}",
+                "read_{$capabilityType}",
+                "delete_{$capabilityType}",
+                "create_{$capabilityType}s",
+                "edit_{$capabilityType}s",
+                "read_{$capabilityType}s",
+                "delete_{$capabilityType}s"
+            );
+        }
+
+        return $capabilities;
+    }
+
+    /**
+     * Return's the plugin's REST API capabilities.
+     *
+     * @return array
+     */
+    public static function getRestApiCapabilities()
+    {
+        $capabilities = array();
+
+        $capabilities['license'] = array(
+            'read_licenses',
+            'read_license',
+            'create_license',
+            'edit_license',
+            'activate_license',
+            'deactivate_license',
+            'validate_license'
+        );
+
+        $capabilities['generator'] = array(
+            'read_generators',
+            'read_generator',
+            'create_generator',
+            'edit_generator',
+            'use_generator'
+        );
+
+        $capabilities['product'] = array(
+            'update_product',
+            'download_product'
+        );
+
+        return $capabilities;
     }
 }

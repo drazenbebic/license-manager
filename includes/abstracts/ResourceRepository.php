@@ -172,11 +172,10 @@ abstract class ResourceRepository extends Singleton implements RepositoryInterfa
      *
      * @param array       $query
      * @param null|string $orderBy
-     * @param null|string $sort
      *
      * @return bool|ResourceModel[]
      */
-    public function findAllBy($query, $orderBy = null, $sort = null)
+    public function findAllBy($query, $orderBy = null)
     {
         if (!class_exists($this->model) || !$query || !is_array($query) || count($query) <= 0) {
             return false;
@@ -188,12 +187,15 @@ abstract class ResourceRepository extends Singleton implements RepositoryInterfa
         $sqlQuery = "SELECT * FROM {$this->table} WHERE 1=1 ";
         $sqlQuery .= $this->parseQueryConditions($query);
 
-        if ($orderBy && is_string($orderBy)) {
-            $sqlQuery .= "ORDER BY {$orderBy} ";
-        }
+        if ($orderBy !== null && is_array($orderBy)) {
+            $column = key($orderBy);
+            $sort = $orderBy[$column];
 
-        if ($sort && is_string($sort)) {
-            $sqlQuery .= "{$sort} ";
+            if (!in_array($sort, array('ASC', 'DESC'))) {
+                $sort = 'ASC';
+            }
+
+            $sqlQuery .= "ORDER BY {$column} {$sort}";
         }
 
         $sqlQuery .= ';';

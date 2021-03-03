@@ -3,7 +3,6 @@
 namespace LicenseManagerForWooCommerce\Enums;
 
 use ReflectionClass;
-use ReflectionException;
 
 defined('ABSPATH') || exit;
 
@@ -38,6 +37,13 @@ abstract class LicenseStatus
     const INACTIVE = 4;
 
     /**
+     * Enumerator value used for disabled licenses.
+     *
+     * @var int
+     */
+    const DISABLED = 5;
+
+    /**
      * Available enumerator values.
      *
      * @var array
@@ -46,7 +52,8 @@ abstract class LicenseStatus
         self::SOLD,
         self::DELIVERED,
         self::ACTIVE,
-        self::INACTIVE
+        self::INACTIVE,
+        self::DISABLED
     );
 
     /**
@@ -58,7 +65,8 @@ abstract class LicenseStatus
         'sold',
         'delivered',
         'active',
-        'inactive'
+        'inactive',
+        'disabled'
     );
 
     /**
@@ -70,7 +78,8 @@ abstract class LicenseStatus
         'sold'      => self::SOLD,
         'delivered' => self::DELIVERED,
         'active'    => self::ACTIVE,
-        'inactive'  => self::INACTIVE
+        'inactive'  => self::INACTIVE,
+        'disabled'  => self::DISABLED
     );
 
     /**
@@ -86,7 +95,8 @@ abstract class LicenseStatus
             self::SOLD      => 'SOLD',
             self::DELIVERED => 'DELIVERED',
             self::ACTIVE    => 'ACTIVE',
-            self::INACTIVE  => 'INACTIVE'
+            self::INACTIVE  => 'INACTIVE',
+            self::DISABLED  => 'DISABLED'
         );
 
         return $labels[$status];
@@ -115,6 +125,10 @@ abstract class LicenseStatus
             array(
                 'value' => self::DELIVERED,
                 'name' => __('Delivered', 'license-manager-for-woocommerce')
+            ),
+            array(
+                'value' => self::DISABLED,
+                'name' => __('Disabled', 'license-manager-for-woocommerce')
             )
         );
     }
@@ -123,7 +137,6 @@ abstract class LicenseStatus
      * Returns the class constants as an array.
      *
      * @return array
-     * @throws ReflectionException
      */
     public static function getConstants()
     {

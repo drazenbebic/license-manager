@@ -4,7 +4,7 @@ namespace LicenseManagerForWooCommerce\Enums;
 
 defined('ABSPATH') || exit;
 
-class ColumnType
+abstract class ColumnType
 {
     /**
      * @var string

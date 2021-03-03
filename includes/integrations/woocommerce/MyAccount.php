@@ -10,38 +10,70 @@ defined('ABSPATH') || exit;
 class MyAccount
 {
     /**
+     * @var array
+     */
+    protected $queryVars;
+
+    /**
      * MyAccount constructor.
      */
     public function __construct()
     {
-        add_rewrite_endpoint('view-license-keys', EP_ROOT | EP_PAGES);
+        $this->queryVars = array(
+            'licenses' => get_option('woocommerce_myaccount_licenses_endpoint', 'licenses')
+        );
 
-        add_filter('woocommerce_account_menu_items',                 array($this, 'accountMenuItems'), 10, 1);
-        add_action('woocommerce_account_view-license-keys_endpoint', array($this, 'viewLicenseKeys'));
+        add_filter('woocommerce_get_query_vars',            array($this, 'initQueryVars'),    10, 1);
+        add_filter('woocommerce_account_menu_items',        array($this, 'licenseMenuItem'),  10, 1);
+        add_action('woocommerce_account_licenses_endpoint', array($this, 'licensesEndpoint'), 10, 1);
+        add_action('woocommerce_endpoint_licenses_title',   array($this, 'licensesTitle'),    10, 2);
+    }
+
+    /**
+     * Initialize the plugin's query parameters.
+     *
+     * @param array $queryVars
+     * @return array
+     */
+    public function initQueryVars($queryVars)
+    {
+        return array_merge($queryVars, $this->queryVars);
     }
 
     /**
      * Adds the plugin pages to the "My account" section.
      *
-     * @param array $items
-     *
+     * @param array $menuItems
      * @return array
      */
-    public function accountMenuItems($items)
+    public function licenseMenuItem($menuItems)
     {
-        $customItems = array(
-            'view-license-keys' => __('License keys', 'license-manager-for-woocommerce')
+        // If the Licenses endpoint setting is empty, don't display it in line with core WC behaviour.
+        if (empty($this->queryVars['licenses'])) {
+            return $menuItems;
+        }
+
+        $label = apply_filters(
+            'lmfwc_myaccount_licenses_page_title',
+            __('Licenses', 'license-manager-for-woocommerce')
         );
 
-        $customItems = array_slice( $items, 0, 2, true ) + $customItems + array_slice( $items, 2, count( $items ), true );
+        // Add our menu item after the Orders tab if it exists, otherwise just add it to the end
+        if (array_key_exists('orders', $menuItems)) {
+            $menuItems = lmfwc_array_insert_after('orders', $menuItems, 'licenses', $label);
+        } else {
+            $menuItems['licenses'] = $label;
+        }
 
-        return $customItems;
+        return $menuItems;
     }
 
     /**
      * Creates an overview of all purchased license keys.
+     *
+     * @param int $page
      */
-    public function viewLicenseKeys()
+    public function licensesEndpoint($page)
     {
         $user = wp_get_current_user();
 
@@ -77,25 +109,33 @@ class MyAccount
 
         wp_enqueue_style('lmfwc_admin_css', LMFWC_CSS_URL . 'main.css');
 
-        global $wp_query;
-
-        $page = 1;
-
-        if ($wp_query->query['view-license-keys']) {
-            $page = (int)$wp_query->query['view-license-keys'];
-        }
-
-        $licenseKeys = apply_filters('lmfwc_get_all_customer_license_keys', $user->ID);
-
         echo wc_get_template_html(
-            'myaccount/lmfwc-view-license-keys.php',
+            'myaccount/lmfwc-licenses.php',
             array(
-                'dateFormat'  => get_option('date_format'),
-                'licenseKeys' => $licenseKeys,
-                'page'        => $page
+                'date_format'       => get_option('date_format'),
+                'customer_licenses' => apply_filters('lmfwc_get_all_customer_license_keys', $user->ID),
+                'page'              => (int)$page,
+                'can_activate'      => Settings::get('lmfwc_allow_users_to_activate'),
+                'can_deactivate'    => Settings::get('lmfwc_allow_users_to_deactivate'),
             ),
             '',
             LMFWC_TEMPLATES_DIR
         );
+    }
+
+    /**
+     * Sets the page title for the "My account -> Licenses" page.
+     *
+     * @param string $title
+     * @param string $endpoint
+     * @return string
+     */
+    public function licensesTitle($title, $endpoint)
+    {
+        if ($endpoint === 'licenses') {
+            $title = __('Licenses', 'license-manager-for-woocommerce');
+        }
+
+        return $title;
     }
 }

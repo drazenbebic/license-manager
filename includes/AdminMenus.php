@@ -91,7 +91,7 @@ class AdminMenus
         add_menu_page(
             __('License Manager', 'license-manager-for-woocommerce'),
             __('License Manager', 'license-manager-for-woocommerce'),
-            'manage_options',
+            'manage_license_manager_for_woocommerce',
             self::LICENSES_PAGE,
             array($this, 'licensesPage'),
             'dashicons-lock',
@@ -101,7 +101,7 @@ class AdminMenus
             self::LICENSES_PAGE,
             __('License Manager', 'license-manager-for-woocommerce'),
             __('License keys', 'license-manager-for-woocommerce'),
-            'manage_options',
+            'manage_license_manager_for_woocommerce',
             self::LICENSES_PAGE,
             array($this, 'licensesPage')
         );
@@ -112,7 +112,7 @@ class AdminMenus
             self::LICENSES_PAGE,
             __('License Manager - Generators', 'license-manager-for-woocommerce'),
             __('Generators', 'license-manager-for-woocommerce'),
-            'manage_options',
+            'manage_license_manager_for_woocommerce',
             self::GENERATORS_PAGE,
             array($this, 'generatorsPage')
         );
@@ -123,7 +123,7 @@ class AdminMenus
             self::LICENSES_PAGE,
             __('License Manager - Settings', 'license-manager-for-woocommerce'),
             __('Settings', 'license-manager-for-woocommerce'),
-            'manage_options',
+            'manage_license_manager_for_woocommerce',
             self::SETTINGS_PAGE,
             array($this, 'settingsPage')
         );
@@ -187,7 +187,7 @@ class AdminMenus
 
         // Edit license keys
         if ($action === 'edit') {
-            if (!current_user_can('manage_options')) {
+            if (!current_user_can('manage_license_manager_for_woocommerce')) {
                 wp_die(__('Insufficient permission', 'license-manager-for-woocommerce'));
             }
 
@@ -249,7 +249,7 @@ class AdminMenus
 
         // Edit generators
         if ($action === 'edit') {
-            if (!current_user_can('manage_options')) {
+            if (!current_user_can('manage_license_manager_for_woocommerce')) {
                 wp_die(__('Insufficient permission', 'license-manager-for-woocommerce'));
             }
 
@@ -397,7 +397,9 @@ class AdminMenus
      */
     public function adminFooterText($footerText)
     {
-        if (!current_user_can('manage_options') || !function_exists('wc_get_screen_ids')) {
+        if (!current_user_can('manage_license_manager_for_woocommerce')
+            || !function_exists('wc_get_screen_ids')
+        ) {
             return $footerText;
         }
 

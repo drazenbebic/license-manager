@@ -105,7 +105,7 @@ class License
         if ($result['failed'] == 0 && $result['added'] > 0) {
             // Update the stock
             if ($status === LicenseStatusEnum::ACTIVE) {
-                apply_filters('lmfwc_stock_increase', $productId, $result['added']);
+                lmfwc_stock_increase($productId, $result['added']);
             }
 
             // Display a success message
@@ -128,7 +128,7 @@ class License
         if ($result['failed'] > 0 && $result['added'] > 0) {
             // Update the stock
             if ($status === LicenseStatusEnum::ACTIVE) {
-                apply_filters('lmfwc_stock_increase', $productId, $result['added']);
+                lmfwc_stock_increase($productId, $result['added']);
             }
 
             // Display a warning message
@@ -220,7 +220,7 @@ class License
 
             // Update the stock
             if ($license->getStatus() == LicenseStatusEnum::ACTIVE) {
-                apply_filters('lmfwc_stock_increase', $productId);
+                lmfwc_stock_increase($productId);
             }
         }
 
@@ -289,7 +289,7 @@ class License
 
         // Update the stock
         if ($oldLicense->getProductId() !== null && $oldLicense->getStatus() === LicenseStatusEnum::ACTIVE) {
-            apply_filters('lmfwc_stock_decrease', $oldLicense->getProductId());
+            lmfwc_stock_decrease($oldLicense->getProductId());
         }
 
         /** @var LicenseResourceModel $license */
@@ -312,7 +312,7 @@ class License
         if ($license) {
             // Update the stock
             if ($license->getProductId() !== null && $license->getStatus() === LicenseStatusEnum::ACTIVE) {
-                apply_filters('lmfwc_stock_increase', $license->getProductId());
+                lmfwc_stock_increase($license->getProductId());
             }
 
             if ( ! $expiresAt && $validFor ) {

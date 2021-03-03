@@ -43,11 +43,12 @@ interface ResourceRepository
     public function findAll();
 
     /**
-     * @param array $query
+     * @param array      $query
+     * @param array|null $orderBy
      *
      * @return mixed
      */
-    public function findAllBy($query);
+    public function findAllBy($query, $orderBy);
 
     /**
      * @param int   $id

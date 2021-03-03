@@ -17,9 +17,7 @@ defined('ABSPATH') || exit;
  *
  * @param string $licenseKey  The license key being added
  * @param array  $licenseData Key/value pairs with the license table column names as keys
- *
- * @return bool|LicenseResourceModel
- * @throws Exception
+ * @return LicenseResourceModel|WP_Error
  */
 function lmfwc_add_license($licenseKey, $licenseData = array())
 {
@@ -60,16 +58,19 @@ function lmfwc_add_license($licenseKey, $licenseData = array())
     }
 
     if (!in_array($status, LicenseStatusEnum::$status)) {
-        throw new Exception('\'status\' array key not valid. Possible values are: 1 for SOLD, 2 for DELIVERED,
-        3 for ACTIVE, and 4 for INACTIVE.');
+        return new WP_Error('\'status\' array key not valid. Possible values are: 1 for SOLD, 2 for DELIVERED, 3 for ACTIVE, 4 for INACTIVE, and 5 for DISABLED.');
     }
 
     if (apply_filters('lmfwc_duplicate', $licenseKey)) {
-        throw new Exception("The license key '{$licenseKey}' already exists.");
+        return new WP_Error("The license key '{$licenseKey}' already exists.");
     }
 
     if ($expiresAt !== null) {
-        new DateTime($expiresAt);
+        try {
+            new DateTime($expiresAt);
+        } catch (Exception $e) {
+            return new WP_Error($e->getMessage());
+        }
     }
 
     $encryptedLicenseKey = apply_filters('lmfwc_encrypt', $licenseKey);
@@ -91,12 +92,12 @@ function lmfwc_add_license($licenseKey, $licenseData = array())
     $license = LicenseResourceRepository::instance()->insert($queryData);
 
     if (!$license) {
-        return false;
+        return new WP_Error("The license key '{$licenseKey}' could not be added");
     }
 
     // Update the stock
     if ($license->getProductId() !== null && $license->getStatus() === LicenseStatusEnum::ACTIVE) {
-        apply_filters('lmfwc_stock_increase', $license->getProductId());
+        lmfwc_stock_increase($license->getProductId());
     }
 
     return $license;
@@ -106,9 +107,7 @@ function lmfwc_add_license($licenseKey, $licenseData = array())
  * Retrieves a single license from the database.
  *
  * @param string $licenseKey The license key to be deleted.
- *
- * @return bool|LicenseResourceModel
- * @throws Exception
+ * @return LicenseResourceModel|WP_Error
  */
 function lmfwc_get_license($licenseKey)
 {
@@ -120,7 +119,7 @@ function lmfwc_get_license($licenseKey)
     );
 
     if (!$license) {
-        return false;
+        return new WP_Error("The license key '{$licenseKey}' could not be found.");
     }
 
     return $license;
@@ -129,18 +128,25 @@ function lmfwc_get_license($licenseKey)
 /**
  * Retrieves multiple license keys by a query array.
  *
- * @param array $query Key/value pairs with the license table column names as keys
- *
- * @return bool|LicenseResourceModel[]
+ * @param array       $query   Key/value pairs with the license table column names as keys
+ * @param string|null $orderBy Column name, followed by either ASC or DESC
+ * @return LicenseResourceModel[]
  */
-function lmfwc_get_licenses($query)
+function lmfwc_get_licenses($query, $orderBy = null)
 {
     if (array_key_exists('license_key', $query)) {
         $query['hash'] = apply_filters('lmfwc_hash', $query['license_key']);
         unset($query['license_key']);
     }
 
-    return LicenseResourceRepository::instance()->findAllBy($query);
+    /** @var LicenseResourceModel[] $licenses */
+    $licenses = LicenseResourceRepository::instance()->findAllBy($query, $orderBy);
+
+    if (!$licenses) {
+        return array();
+    }
+
+    return $licenses;
 }
 
 /**
@@ -148,9 +154,7 @@ function lmfwc_get_licenses($query)
  *
  * @param string $licenseKey  The license key being updated.
  * @param array  $licenseData Key/value pairs of the updated data.
- *
- * @return bool|LicenseResourceModel
- * @throws Exception
+ * @return LicenseResourceModel|WP_Error
  */
 function lmfwc_update_license($licenseKey, $licenseData)
 {
@@ -164,7 +168,7 @@ function lmfwc_update_license($licenseKey, $licenseData)
     );
 
     if (!$oldLicense) {
-        return false;
+        return new WP_Error("The license key '{$licenseKey}' could not be found.");
     }
 
     // Order ID
@@ -198,7 +202,7 @@ function lmfwc_update_license($licenseKey, $licenseData)
     if (array_key_exists('license_key', $licenseData)) {
         // Check for possible duplicates
         if (apply_filters('lmfwc_duplicate', $licenseData['license_key'], $oldLicense->getId())) {
-            throw new Exception("The license key '{$licenseData['license_key']}' already exists.");
+            return new WP_Error("The license key '{$licenseData['license_key']}' already exists.");
         }
 
         $updateData['license_key'] = apply_filters('lmfwc_encrypt', $licenseData['license_key']);
@@ -208,7 +212,11 @@ function lmfwc_update_license($licenseKey, $licenseData)
     // Expires at
     if (array_key_exists('expires_at', $licenseData)) {
         if ($licenseData['expires_at'] !== null) {
-            new DateTime($licenseData['expires_at']);
+            try {
+                new DateTime($licenseData['expires_at']);
+            } catch (Exception $e) {
+                return new WP_Error($e->getMessage());
+            }
         }
 
         $updateData['expires_at'] = $licenseData['expires_at'];
@@ -226,8 +234,7 @@ function lmfwc_update_license($licenseKey, $licenseData)
     // Status
     if (array_key_exists('status', $licenseData)) {
         if (!in_array((int)$licenseData['status'], LicenseStatusEnum::$status)) {
-            throw new Exception('The \'status\' array key not valid. Possible values are: 1 for SOLD, 2 for
-            DELIVERED, 3 for ACTIVE, and 4 for INACTIVE.');
+            return new WP_Error('The \'status\' array key not valid. Possible values are: 1 for SOLD, 2 for DELIVERED, 3 for ACTIVE, 4 for INACTIVE, and 5 for DISABLED.');
         }
 
         $updateData['status'] = (int)$licenseData['status'];
@@ -253,7 +260,7 @@ function lmfwc_update_license($licenseKey, $licenseData)
 
     // Update the stock
     if ($oldLicense->getProductId() !== null && $oldLicense->getStatus() === LicenseStatusEnum::ACTIVE) {
-        apply_filters('lmfwc_stock_decrease', $oldLicense->getProductId());
+        lmfwc_stock_decrease($oldLicense->getProductId());
     }
 
     /** @var LicenseResourceModel $license */
@@ -265,7 +272,7 @@ function lmfwc_update_license($licenseKey, $licenseData)
     );
 
     if (!$license) {
-        return false;
+        return new WP_Error("The license key '{$licenseKey}' could not be updated.");
     }
 
     $newLicenseHash = apply_filters('lmfwc_hash', $licenseKey);
@@ -282,12 +289,12 @@ function lmfwc_update_license($licenseKey, $licenseData)
     );
 
     if (!$newLicense) {
-        return false;
+        return new WP_Error('The updated license key could not be found.');
     }
 
     // Update the stock
     if ($newLicense->getProductId() !== null && $newLicense->getStatus() === LicenseStatusEnum::ACTIVE) {
-        apply_filters('lmfwc_stock_increase', $newLicense->getProductId());
+        lmfwc_stock_increase($newLicense->getProductId());
     }
 
     return $newLicense;
@@ -297,9 +304,7 @@ function lmfwc_update_license($licenseKey, $licenseData)
  * Deletes the specified license.
  *
  * @param string $licenseKey The license key to be deleted.
- *
- * @return bool
- * @throws Exception
+ * @return bool|WP_Error
  */
 function lmfwc_delete_license($licenseKey)
 {
@@ -315,7 +320,7 @@ function lmfwc_delete_license($licenseKey)
         && $oldLicense->getProductId() !== null
         && $oldLicense->getStatus() === LicenseStatusEnum::ACTIVE
     ) {
-        apply_filters('lmfwc_stock_decrease', $oldLicense->getProductId());
+        lmfwc_stock_decrease($oldLicense->getProductId());
     }
 
     /** @var LicenseResourceModel $license */
@@ -326,7 +331,7 @@ function lmfwc_delete_license($licenseKey)
     );
 
     if (!$license) {
-        return false;
+        return new WP_Error("The license key '{$licenseKey}' could not be found.");
     }
 
     return true;
@@ -336,12 +341,11 @@ function lmfwc_delete_license($licenseKey)
  * Increments the "times_activated" column, if "times_activated_max" allows it.
  *
  * @param string $licenseKey The license key to be activated.
- *
- * @return bool|LicenseResourceModel
- * @throws Exception
+ * @return LicenseResourceModel|WP_Error
  */
 function lmfwc_activate_license($licenseKey)
 {
+    /** @var LicenseResourceModel $license */
     $license = LicenseResourceRepository::instance()->findBy(
         array(
             'hash' => apply_filters('lmfwc_hash', $licenseKey)
@@ -349,7 +353,7 @@ function lmfwc_activate_license($licenseKey)
     );
 
     if (!$license) {
-        return false;
+        return new WP_Error("The license key '{$licenseKey}' could not be found.");
     }
 
     $timesActivated    = null;
@@ -363,8 +367,12 @@ function lmfwc_activate_license($licenseKey)
         $timesActivatedMax = absint($license->getTimesActivatedMax());
     }
 
+    if ($license->getStatus() === LicenseStatusEnum::DISABLED) {
+        return new WP_Error("The license key '{$licenseKey}' is disabled.");
+    }
+
     if ($timesActivatedMax && ($timesActivated >= $timesActivatedMax)) {
-        throw new Exception("License Key: {$licenseKey} reached maximum activation count.");
+        return new WP_Error("The license key '{$licenseKey}' reached its maximum activation count.");
     }
 
     if (!$timesActivated) {
@@ -382,7 +390,7 @@ function lmfwc_activate_license($licenseKey)
     );
 
     if (!$updatedLicense) {
-        return false;
+        return new WP_Error("The license key '{$licenseKey}' could not be activated.");
     }
 
     return $updatedLicense;
@@ -392,12 +400,11 @@ function lmfwc_activate_license($licenseKey)
  * Decrements the "times_activated" column, if possible.
  *
  * @param string $licenseKey The license key to be deactivated.
- *
- * @return bool|LicenseResourceModel
- * @throws Exception
+ * @return LicenseResourceModel|WP_Error
  */
 function lmfwc_deactivate_license($licenseKey)
 {
+    /** @var LicenseResourceModel $license */
     $license = LicenseResourceRepository::instance()->findBy(
         array(
             'hash' => apply_filters('lmfwc_hash', $licenseKey)
@@ -405,17 +412,21 @@ function lmfwc_deactivate_license($licenseKey)
     );
 
     if (!$license) {
-        return false;
+        return new WP_Error("The license key '{$licenseKey}' could not be found.");
     }
 
     $timesActivated = null;
 
     if ($license->getTimesActivated() !== null) {
-        $timesActivated = absint($license->getTimesActivated());
+        $timesActivated = $license->getTimesActivated();
+    }
+
+    if ($license->getStatus() === LicenseStatusEnum::DISABLED) {
+        return new WP_Error("The license key '{$licenseKey}' is disabled.");
     }
 
     if (!$timesActivated || $timesActivated === 0) {
-        throw new Exception("License Key: {$licenseKey} has not been activated yet.");
+        return new WP_Error("The license key '{$licenseKey}' has not been activated yet.");
     }
 
     $timesActivatedNew = (int)$timesActivated - 1;
@@ -429,7 +440,7 @@ function lmfwc_deactivate_license($licenseKey)
     );
 
     if (!$updatedLicense) {
-        return false;
+        return new WP_Error("The license key '{$licenseKey}' could not be deactivated.");
     }
 
     return $updatedLicense;

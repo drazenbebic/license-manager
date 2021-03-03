@@ -68,7 +68,6 @@ class Generator
         $maxPossibleKeys = pow($uniqueCharacters, $generator->getChunks() * $generator->getChunkLength());
 
         if ($amount > $maxPossibleKeys) {
-            Logger::exception(array($amount, $licenses, $generator));
             throw new Exception('It\'s not possible to generate that many keys with the given parameters, there are not enough combinations. Please review your inputs.');
         }
 

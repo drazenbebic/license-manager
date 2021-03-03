@@ -3,7 +3,6 @@
 namespace LicenseManagerForWooCommerce\Integrations\WooCommerce;
 
 use LicenseManagerForWooCommerce\Integrations\WooCommerce\Emails\CustomerDeliverLicenseKeys;
-use LicenseManagerForWooCommerce\Integrations\WooCommerce\Emails\CustomerPreorderComplete;
 use LicenseManagerForWooCommerce\Integrations\WooCommerce\Emails\Templates;
 use LicenseManagerForWooCommerce\Settings;
 use WC_Email;
@@ -32,13 +31,18 @@ class Email
     public function afterOrderTable($order, $isAdminEmail, $plainText, $email)
     {
         // Return if the order isn't complete.
-        if ($order->get_status() !== 'completed'
-            && !get_post_meta($order->get_id(), 'lmfwc_order_complete')
-        ) {
+        if ($order->get_status() !== 'completed' && !lmfwc_is_order_complete($order->get_id())) {
             return;
         }
 
-        if (!$data = apply_filters('lmfwc_get_customer_license_keys', $order)) {
+        $args = array(
+            'order' => $order,
+            'data'  => null
+        );
+
+        $customerLicenseKeys = apply_filters('lmfwc_get_customer_license_keys', $args);
+
+        if (!$customerLicenseKeys['data']) {
             return;
         }
 
@@ -46,17 +50,14 @@ class Email
             // Send the keys out if the setting is active.
             if ($plainText) {
                 echo wc_get_template(
-                    'emails/plain/lmfwc-email-order-license-keys.php',
+                    'emails/plain/lmfwc-email-order-licenses.php',
                     array(
-                        'heading'       => apply_filters('lmfwc_license_keys_table_heading', null),
-                        'valid_until'   => apply_filters('lmfwc_license_keys_table_valid_until', null),
-                        'data'          => $data,
-                        'date_format'   => get_option('date_format'),
                         'order'         => $order,
                         'sent_to_admin' => $isAdminEmail,
                         'plain_text'    => true,
                         'email'         => $email,
-                        'args'          => apply_filters('lmfwc_template_args_emails_email_order_license_keys', array())
+                        'data'          => $customerLicenseKeys['data'],
+                        'date_format'   => get_option('date_format'),
                     ),
                     '',
                     LMFWC_TEMPLATES_DIR
@@ -65,17 +66,14 @@ class Email
 
             else {
                 echo wc_get_template_html(
-                    'emails/lmfwc-email-order-license-keys.php',
+                    'emails/lmfwc-email-order-licenses.php',
                     array(
-                        'heading'       => apply_filters('lmfwc_license_keys_table_heading', null),
-                        'valid_until'   => apply_filters('lmfwc_license_keys_table_valid_until', null),
-                        'data'          => $data,
-                        'date_format'   => get_option('date_format'),
                         'order'         => $order,
                         'sent_to_admin' => $isAdminEmail,
                         'plain_text'    => false,
                         'email'         => $email,
-                        'args'          => apply_filters('lmfwc_template_args_emails_email_order_license_keys', array())
+                        'data'          => $customerLicenseKeys['data'],
+                        'date_format'   => get_option('date_format')
                     ),
                     '',
                     LMFWC_TEMPLATES_DIR
@@ -89,7 +87,12 @@ class Email
                 echo wc_get_template(
                     'emails/plain/lmfwc-email-order-license-notice.php',
                     array(
-                        'args' => apply_filters('lmfwc_template_args_emails_email_order_license_notice', array())
+                        'order'         => $order,
+                        'sent_to_admin' => $isAdminEmail,
+                        'plain_text'    => false,
+                        'email'         => $email,
+                        'data'          => $customerLicenseKeys['data'],
+                        'date_format'   => get_option('date_format')
                     ),
                     '',
                     LMFWC_TEMPLATES_DIR
@@ -100,14 +103,17 @@ class Email
                 echo wc_get_template_html(
                     'emails/lmfwc-email-order-license-notice.php',
                     array(
-                        'args' => apply_filters('lmfwc_template_args_emails_email_order_license_notice', array())
+                        'order'         => $order,
+                        'sent_to_admin' => $isAdminEmail,
+                        'plain_text'    => false,
+                        'email'         => $email,
+                        'data'          => $customerLicenseKeys['data'],
+                        'date_format'   => get_option('date_format')
                     ),
                     '',
                     LMFWC_TEMPLATES_DIR
                 );
             }
-
-            include LMFWC_TEMPLATES_DIR . '';
         }
     }
 
@@ -123,7 +129,6 @@ class Email
         new Templates();
 
         $pluginEmails = array(
-            //'LMFWC_Customer_Preorder_Complete'    => new CustomerPreorderComplete(),
             'LMFWC_Customer_Deliver_License_Keys' => new CustomerDeliverLicenseKeys()
         );
 

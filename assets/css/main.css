@@ -197,15 +197,31 @@ table.wp-list-table.lizenzschlssel span.lmfwc-date {
 	color: var(--color-danger);
 }
 
+.lmfwc-status.disabled {
+	border: 2px solid var(--color-warning);
+	color: var(--color-warning);
+}
+.lmfwc-status.disabled > span.dashicons {
+	color: var(--color-warning);
+}
+
 .lmfwc-status.activation.done,
 .lmfwc-status.activation.done > span.dashicons {
 	color: var(--color-info);
 }
 
 /** My Account **/
-.lmfwc-myaccount-license-key {
+.lmfwc-myaccount-license-key span {
 	font-family: Consolas, monospace;
 	font-size: 13px;
+	white-space: nowrap;
+}
+.lmfwc-myaccount-actions {
+	white-space: nowrap;
+}
+.lmfwc-myaccount-actions form {
+	margin: 0;
+	display: inline-block;
 }
 
 /** Custom icons **/

@@ -10,7 +10,7 @@ use WP_REST_Response;
 
 defined('ABSPATH') || exit;
 
-class RestController extends WP_REST_Controller
+abstract class RestController extends WP_REST_Controller
 {
     /**
      * Returns a structured response object for the API.
@@ -27,7 +27,7 @@ class RestController extends WP_REST_Controller
         return new WP_REST_Response(
             array(
                 'success' => $success,
-                'data'    => apply_filters('lmfwc_rest_api_pre_response', $_SERVER['REQUEST_METHOD'], $route, $data)
+                'data'    => apply_filters('lmfwc_rest_api_pre_response', $data, $_SERVER['REQUEST_METHOD'], $route)
             ),
             $code
         );
@@ -107,6 +107,10 @@ class RestController extends WP_REST_Controller
             return LicenseStatus::INACTIVE;
         }
 
+        if (strtoupper($enumerator) === 'DISABLED') {
+            return LicenseStatus::DISABLED;
+        }
+
         return $status;
     }
 
@@ -129,23 +133,17 @@ class RestController extends WP_REST_Controller
     }
 
     /**
-     * Checks if the current user can access the requested route.
+     * Checks if the current user has permission to perform the request.
      *
-     * @param string $object  "license" or "generator"
-     * @param string $context "read", "edit", "create", "delete", or "batch"
+     * @param string $cap Capability slug
      *
      * @return bool
      */
-    protected function permissionCheck($object, $context = 'read')
+    protected function capabilityCheck($cap)
     {
-        $objects = array(
-            'license'   => 'manage_options',
-            'generator' => 'manage_options'
-        );
+        $hasPermission = current_user_can($cap);
 
-        $permission = current_user_can($objects[$object]);
-
-        return apply_filters('lmfwc_rest_check_permissions', $permission, $context, $object);
+        return apply_filters('lmfwc_rest_capability_check', $hasPermission, $cap);
     }
 
     /**

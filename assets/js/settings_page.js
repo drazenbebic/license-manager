@@ -1,5 +1,7 @@
-document.addEventListener('DOMContentLoaded', function(event) {
-	const selectUser = jQuery('select#user');
+jQuery(function($) {
+	'use strict';
+
+	const selectUser = $('select#user');
 
 	if (selectUser) selectUser.select2();
 });

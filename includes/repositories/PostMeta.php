@@ -56,7 +56,11 @@ class PostMeta
             $products = [];
 
             foreach ($results as $row) {
-                $products[] = wc_get_product($row->post_id);
+                if (!$product = wc_get_product($row->post_id)) {
+                    continue;
+                }
+
+                $products[] = $product;
             }
         } else {
             $products = [];

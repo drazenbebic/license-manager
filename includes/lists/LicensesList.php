@@ -134,6 +134,17 @@ class LicensesList extends WP_List_Table
             LicenseResourceRepository::instance()->countBy(array('status' => LicenseStatus::INACTIVE))
         );
 
+        // Disabled link
+        $class = $current == LicenseStatus::DISABLED ? ' class="current"' :'';
+        $disabledUrl = esc_url(add_query_arg('status', LicenseStatus::DISABLED));
+        $statusLinks['disabled'] = sprintf(
+            '<a href="%s" %s>%s <span class="count">(%d)</span></a>',
+            $disabledUrl,
+            $class,
+            __('Disabled', 'license-manager-for-woocommerce'),
+            LicenseResourceRepository::instance()->countBy(array('status' => LicenseStatus::DISABLED))
+        );
+
         return $statusLinks;
     }
 
@@ -400,6 +411,7 @@ class LicensesList extends WP_List_Table
         // Activate, Deactivate
         if ($item['status'] != LicenseStatus::SOLD
             && $item['status'] != LicenseStatus::DELIVERED
+            && $item['status'] != LicenseStatus::DISABLED
         ) {
             if ($item['status'] != LicenseStatus::ACTIVE) {
                 $actions['activate'] = sprintf(
@@ -530,7 +542,7 @@ class LicensesList extends WP_List_Table
             $user = get_userdata($item['user_id']);
 
             if ($user instanceof WP_User) {
-                if (current_user_can('manage_options')) {
+                if (current_user_can('edit_users')) {
                     $html .= sprintf(
                         '<a href="%s">%s (#%d - %s)</a>',
                         get_edit_user_link($user->ID),
@@ -636,7 +648,7 @@ class LicensesList extends WP_List_Table
             $user = get_user_by('id', $item['created_by']);
 
             if ($user instanceof WP_User) {
-                if (current_user_can('manage_options')) {
+                if (current_user_can('edit_users')) {
                     $html .= sprintf(
                         '<br>%s <a href="%s">%s</a>',
                         __('by', 'license-manager-for-woocommerce'),
@@ -689,7 +701,7 @@ class LicensesList extends WP_List_Table
             $user = get_user_by('id', $item['updated_by']);
 
             if ($user instanceof WP_User) {
-                if (current_user_can('manage_options')) {
+                if (current_user_can('edit_users')) {
                     $html .= sprintf(
                         '<br>%s <a href="%s">%s</a>',
                         __('by', 'license-manager-for-woocommerce'),
@@ -804,6 +816,12 @@ class LicensesList extends WP_List_Table
                     __('Inactive', 'license-manager-for-woocommerce')
                 );
                 break;
+            case LicenseStatus::DISABLED:
+                $status = sprintf(
+                    '<div class="lmfwc-status disabled"><span class="dashicons dashicons-warning"></span> %s</div>',
+                    __('Disabled', 'license-manager-for-woocommerce')
+                );
+                break;
             default:
                 $status = sprintf(
                     '<div class="lmfwc-status unknown">%s</div>',
@@ -862,6 +880,7 @@ class LicensesList extends WP_List_Table
         $actions = array(
             'activate'          => __('Activate', 'license-manager-for-woocommerce'),
             'deactivate'        => __('Deactivate', 'license-manager-for-woocommerce'),
+            'disable'           => __('Mark as disabled', 'license-manager-for-woocommerce'),
             'mark_as_sold'      => __('Mark as sold', 'license-manager-for-woocommerce'),
             'mark_as_delivered' => __('Mark as delivered', 'license-manager-for-woocommerce'),
             'delete'            => __('Delete', 'license-manager-for-woocommerce'),
@@ -885,6 +904,9 @@ class LicensesList extends WP_List_Table
                 break;
             case 'deactivate':
                 $this->toggleLicenseKeyStatus(LicenseStatus::INACTIVE);
+                break;
+            case 'disable':
+                $this->toggleLicenseKeyStatus(LicenseStatus::DISABLED);
                 break;
             case 'mark_as_sold':
                 $this->toggleLicenseKeyStatus(LicenseStatus::SOLD);
@@ -1099,6 +1121,9 @@ class LicensesList extends WP_List_Table
             case LicenseStatus::ACTIVE:
                 $nonce = 'activate';
                 break;
+            case LicenseStatus::DISABLED:
+                $nonce = 'disable';
+                break;
             default:
                 $nonce = 'deactivate';
                 break;
@@ -1121,13 +1146,13 @@ class LicensesList extends WP_List_Table
                 // License was active, but no longer is
                 if ($license->getStatus() === LicenseStatus::ACTIVE && $status !== LicenseStatus::ACTIVE) {
                     // Update the stock
-                    apply_filters('lmfwc_stock_decrease', $license->getProductId());
+                    lmfwc_stock_decrease($license->getProductId());
                 }
 
                 // License was not active, but is now
                 if ($license->getStatus() !== LicenseStatus::ACTIVE && $status === LicenseStatus::ACTIVE) {
                     // Update the stock
-                    apply_filters('lmfwc_stock_increase', $license->getProductId());
+                    lmfwc_stock_increase($license->getProductId());
                 }
             }
 
@@ -1166,7 +1191,7 @@ class LicensesList extends WP_List_Table
             if ($result) {
                 // Update the stock
                 if ($license->getProductId() !== null && $license->getStatus() === LicenseStatus::ACTIVE) {
-                    apply_filters('lmfwc_stock_decrease', $license->getProductId());
+                    lmfwc_stock_decrease($license->getProductId());
                 }
 
                 $count += $result;

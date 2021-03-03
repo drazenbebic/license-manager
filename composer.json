@@ -1,4 +1,11 @@
 {
+    "name": "drazenbebic/license-manager-for-woocommerce",
+    "description": "Sell software license keys through your WooCommerce shop.",
+    "version": "2.3.0",
+    "homepage": "https://www.licensemanager.at",
+    "type": "wordpress-plugin",
+    "license": "GPL-3.0-or-later",
+    "prefer-stable": true,
     "autoload": {
         "psr-4": {
             "LicenseManagerForWooCommerce\\": "includes/",
@@ -11,6 +18,10 @@
             "LicenseManagerForWooCommerce\\Integrations\\": "includes/integrations",
             "LicenseManagerForWooCommerce\\Integrations\\WooCommerce\\": "includes/integrations/woocommerce",
             "LicenseManagerForWooCommerce\\Integrations\\WooCommerce\\Emails\\": "includes/integrations/woocommerce/emails",
+            "LicenseManagerForWooCommerce\\Integrations\\WooCommerceSubscriptions\\": "includes/integrations/woocommerce-subscriptions",
+            "LicenseManagerForWooCommerce\\Integrations\\WooCommerceSubscriptions\\API\\": "includes/integrations/woocommerce-subscriptions/api",
+            "LicenseManagerForWooCommerce\\Integrations\\WooCommerceSubscriptions\\API\\v2\\": "includes/integrations/woocommerce-subscriptions/api/v2",
+            "LicenseManagerForWooCommerce\\Integrations\\WooCommerceSubscriptions\\Lists\\": "includes/integrations/woocommerce-subscriptions/lists",
             "LicenseManagerForWooCommerce\\Interfaces\\": "includes/interfaces",
             "LicenseManagerForWooCommerce\\Lists\\": "includes/lists",
             "LicenseManagerForWooCommerce\\Models\\": "includes/models",
