@@ -65,7 +65,7 @@ class Licenses extends LMFWC_REST_Controller {
 		 * Retrieves a single licenses from the database.
 		 */
 		register_rest_route(
-			$this->namespace, $this->rest_base . '/(?P<license_key>[\w-]+)', array(
+            $this->namespace, $this->rest_base . '/(?P<license_key>([\w-]|%20)+)', array(
 				array(
 					'methods'             => WP_REST_Server::READABLE,
 					'callback'            => array( $this, 'getLicense' ),
@@ -101,7 +101,7 @@ class Licenses extends LMFWC_REST_Controller {
 		 * Updates an already existing license in the database
 		 */
 		register_rest_route(
-			$this->namespace, $this->rest_base . '/(?P<license_key>[\w-]+)', array(
+            $this->namespace, $this->rest_base . '/(?P<license_key>([\w-]|%20)+)', array(
 				array(
 					'methods'             => WP_REST_Server::EDITABLE,
 					'callback'            => array( $this, 'updateLicense' ),
@@ -122,7 +122,7 @@ class Licenses extends LMFWC_REST_Controller {
 		 * Activates a license key
 		 */
 		register_rest_route(
-			$this->namespace, $this->rest_base . '/activate/(?P<license_key>[\w-]+)', array(
+            $this->namespace, $this->rest_base . '/activate/(?P<license_key>([\w-]|%20)+)', array(
 				array(
 					'methods'             => WP_REST_Server::READABLE,
 					'callback'            => array( $this, 'activateLicense' ),
@@ -143,7 +143,7 @@ class Licenses extends LMFWC_REST_Controller {
 		 * Deactivates a license key
 		 */
 		register_rest_route(
-			$this->namespace, $this->rest_base . '/deactivate/(?P<license_key>[\w-]+)', array(
+            $this->namespace, $this->rest_base . '/deactivate/(?P<license_key>([\w-]|%20)+)', array(
 				array(
 					'methods'             => WP_REST_Server::READABLE,
 					'callback'            => array( $this, 'deactivateLicense' ),
@@ -164,7 +164,7 @@ class Licenses extends LMFWC_REST_Controller {
 		 * Activates a license key
 		 */
 		register_rest_route(
-			$this->namespace, $this->rest_base . '/validate/(?P<license_key>[\w-]+)', array(
+            $this->namespace, $this->rest_base . '/validate/(?P<license_key>([\w-]|%20)+)', array(
 				array(
 					'methods'             => WP_REST_Server::READABLE,
 					'callback'            => array( $this, 'validateLicense' ),
@@ -255,7 +255,7 @@ class Licenses extends LMFWC_REST_Controller {
 			);
 		}
 
-		$licenseKey = sanitize_text_field( $request->get_param( 'license_key' ) );
+        $licenseKey = sanitize_text_field(urldecode($request->get_param('license_key')));
 
 		if ( ! $licenseKey ) {
 			return new WP_Error(
@@ -463,7 +463,7 @@ class Licenses extends LMFWC_REST_Controller {
 			);
 		}
 
-		$licenseKey = sanitize_text_field( $urlParams['license_key'] );
+        $licenseKey = sanitize_text_field(urldecode($urlParams['license_key']));
 
 		if ( ! $licenseKey ) {
 			return new WP_Error(
@@ -601,7 +601,7 @@ class Licenses extends LMFWC_REST_Controller {
 			);
 		}
 
-		$licenseKey = sanitize_text_field( $request->get_param( 'license_key' ) );
+        $licenseKey = sanitize_text_field(urldecode($request->get_param('license_key')));
 
 		if ( ! $licenseKey ) {
 			return new WP_Error(
@@ -721,7 +721,7 @@ class Licenses extends LMFWC_REST_Controller {
 			);
 		}
 
-		$licenseKey = sanitize_text_field( $request->get_param( 'license_key' ) );
+        $licenseKey = sanitize_text_field(urldecode($request->get_param('license_key')));
 
 		if ( ! $licenseKey ) {
 			return new WP_Error(
@@ -843,7 +843,7 @@ class Licenses extends LMFWC_REST_Controller {
 			);
 		}
 
-		$licenseKey = sanitize_text_field( $urlParams['license_key'] );
+        $licenseKey = sanitize_text_field(urldecode($urlParams['license_key']));
 
 		if ( ! $licenseKey ) {
 			return new WP_Error(
