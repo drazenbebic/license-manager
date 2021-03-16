@@ -61,11 +61,11 @@ class ProductData {
 				'class'         => 'lmfwc_subscription_renewal_action select short',
 				'wrapper_class' => $wrapperClass['lmfwc_subscription_renewal_action'],
 				'label'         => __( 'On subscription renewal', 'license-manager-for-woocommerce' ),
+				'value'         => $renewalAction,
 				'options'       => array(
 					'issue_new_license'       => __( 'Issue a new license key on each subscription renewal', 'license-manager-for-woocommerce' ),
 					'extend_existing_license' => __( 'Extend the existing license on each subscription renewal', 'license-manager-for-woocommerce' )
-				),
-				'value'   => $renewalAction
+				)
 			)
 		);
 
@@ -94,8 +94,7 @@ class ProductData {
 				'value'             => $customInterval,
 				'type'              => 'number',
 				'custom_attributes' => array(
-					'step' => '1',
-					'min'  => '1'
+					'step' => '1'
 				)
 			)
 		);
@@ -155,7 +154,7 @@ class ProductData {
 			update_post_meta(
 				$postId,
 				'lmfwc_subscription_renewal_custom_interval',
-				intval( $_POST['lmfwc_subscription_renewal_custom_interval'] )
+				(int) $_POST['lmfwc_subscription_renewal_custom_interval']
 			);
 		}
 
@@ -248,8 +247,7 @@ class ProductData {
 				'value'             => $customInterval,
 				'type'              => 'number',
 				'custom_attributes' => array(
-					'step' => '1',
-					'min'  => '1'
+					'step' => '1'
 				)
 			)
 		);
@@ -304,7 +302,7 @@ class ProductData {
 			update_post_meta(
 				$variationId,
 				'lmfwc_subscription_renewal_custom_interval',
-				intval( $_POST['lmfwc_subscription_renewal_custom_interval'][ $i ] )
+				(int) $_POST['lmfwc_subscription_renewal_custom_interval'][ $i ]
 			);
 		}
 

@@ -417,7 +417,7 @@ class ProductData {
 
 		woocommerce_wp_select(
 			array(
-				'id'            => 'lmfwc_licensed_product_assigned_generator',
+				'id'            => "lmfwc_licensed_product_assigned_generator_{$loop}",
 				'name'          => "lmfwc_licensed_product_assigned_generator[{$loop}]",
 				'label'         => __( 'Assign generator', 'license-manager-for-woocommerce' ),
 				'options'       => $generatorOptions,
