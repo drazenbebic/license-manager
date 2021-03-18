@@ -15,7 +15,7 @@
 
 namespace LicenseManagerForWooCommerce;
 
-defined('ABSPATH') || exit;
+defined( 'ABSPATH' ) || exit;
 
 require_once __DIR__ . '/vendor/autoload.php';
 require_once __DIR__ . '/functions/lmfwc-core-functions.php';
@@ -25,14 +25,14 @@ require_once __DIR__ . '/functions/lmfwc-meta-functions.php';
 require_once __DIR__ . '/functions/lmfwc-stock-functions.php';
 
 // Define LMFWC_PLUGIN_FILE.
-if (!defined('LMFWC_PLUGIN_FILE')) {
-    define('LMFWC_PLUGIN_FILE', __FILE__);
-    define('LMFWC_PLUGIN_DIR', __DIR__);
+if ( ! defined( 'LMFWC_PLUGIN_FILE' ) ) {
+	define( 'LMFWC_PLUGIN_FILE', __FILE__ );
+	define( 'LMFWC_PLUGIN_DIR', __DIR__ );
 }
 
 // Define LMFWC_PLUGIN_URL.
-if (!defined('LMFWC_PLUGIN_URL')) {
-    define('LMFWC_PLUGIN_URL', plugins_url('', __FILE__) . '/');
+if ( ! defined( 'LMFWC_PLUGIN_URL' ) ) {
+	define( 'LMFWC_PLUGIN_URL', plugins_url( '', __FILE__ ) . '/' );
 }
 
 /**
@@ -42,9 +42,8 @@ if (!defined('LMFWC_PLUGIN_URL')) {
  *
  * @return Main
  */
-function lmfwc()
-{
-    return Main::instance();
+function lmfwc() {
+	return Main::instance();
 }
 
 // Global for backwards compatibility.

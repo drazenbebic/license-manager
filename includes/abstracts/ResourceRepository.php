@@ -61,27 +61,69 @@ abstract class ResourceRepository extends Singleton implements RepositoryInterfa
 	 * Adds a new entry to the table.
 	 *
 	 * @param array $data
+	 * @param bool $addMeta
 	 *
 	 * @return bool|ResourceModel
 	 */
-	public function insert( $data ) {
+	public function insert( $data, $addMeta = true ) {
 		global $wpdb;
 
-		$meta = array(
-			'created_at' => gmdate( 'Y-m-d H:i:s' ),
-			'created_by' => get_current_user_id()
-		);
+		if ( $addMeta ) {
+			$meta = [
+				'created_at' => gmdate( 'Y-m-d H:i:s' ),
+				'created_by' => get_current_user_id()
+			];
+
+			$data = array_merge( $data, $meta );
+		}
 
 		// Pass the data by reference and sanitize its contents
 		$this->sanitize( $data );
 
-		$insert = $wpdb->insert( $this->table, array_merge( $data, $meta ) );
+		$insert = $wpdb->insert( $this->table, $data );
 
 		if ( ! $insert ) {
 			return false;
 		}
 
 		return $this->find( $wpdb->insert_id );
+	}
+
+	/**
+	 * Adds a new entry to the table or update an existing one.
+	 *
+	 * @param array $data
+	 * @param array $findBy
+	 * @param bool $addMeta
+	 *
+	 * @return bool|ResourceModel
+	 */
+	public function insertUpdate( array $data, array $findBy, $addMeta = true ) {
+		global $wpdb;
+
+		if ( $addMeta ) {
+			$meta = [
+				'created_at' => gmdate( 'Y-m-d H:i:s' ),
+				'created_by' => get_current_user_id()
+			];
+
+			$data = array_merge( $data, $meta );
+		}
+
+		// Pass the data by reference and sanitize its contents
+		$this->sanitize( $data );
+
+		if ( $this->findBy( $findBy ) ) {
+			$result = $wpdb->update( $this->table, $data, $findBy );
+		} else {
+			$result = $wpdb->insert( $this->table, $data );
+		}
+
+		if ( ! $result ) {
+			return false;
+		}
+
+		return true;
 	}
 
 	/**

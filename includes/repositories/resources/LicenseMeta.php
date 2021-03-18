@@ -4,12 +4,11 @@ namespace LicenseManagerForWooCommerce\Repositories\Resources;
 
 use LicenseManagerForWooCommerce\Abstracts\ResourceRepository as AbstractResourceRepository;
 use LicenseManagerForWooCommerce\Enums\ColumnType;
-use LicenseManagerForWooCommerce\Interfaces\ResourceRepository as ResourceRepositoryInterface;
 use LicenseManagerForWooCommerce\Models\Resources\LicenseMeta as LicenseMetaResourceModel;
 
 defined( 'ABSPATH' ) || exit;
 
-class LicenseMeta extends AbstractResourceRepository implements ResourceRepositoryInterface {
+class LicenseMeta extends AbstractResourceRepository {
 	/**
 	 * @var string
 	 */

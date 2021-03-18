@@ -14,27 +14,32 @@ class Setup {
 	/**
 	 * @var int
 	 */
-	const DB_VERSION = 109;
+	public const DB_VERSION = 109;
 
 	/**
 	 * @var string
 	 */
-	const LICENSES_TABLE_NAME = 'lmfwc_licenses';
+	public const LICENSES_TABLE_NAME = 'lmfwc_licenses';
 
 	/**
 	 * @var string
 	 */
-	const GENERATORS_TABLE_NAME = 'lmfwc_generators';
+	public const GENERATORS_TABLE_NAME = 'lmfwc_generators';
 
 	/**
 	 * @var string
 	 */
-	const API_KEYS_TABLE_NAME = 'lmfwc_api_keys';
+	public const PRODUCTS_INSTALLED_ON_TABLE_NAME = 'lmfwc_products_installed_on';
 
 	/**
 	 * @var string
 	 */
-	const LICENSE_META_TABLE_NAME = 'lmfwc_licenses_meta';
+	public const API_KEYS_TABLE_NAME = 'lmfwc_api_keys';
+
+	/**
+	 * @var string
+	 */
+	public const LICENSE_META_TABLE_NAME = 'lmfwc_licenses_meta';
 
 	/**
 	 * Installation script.
@@ -124,6 +129,7 @@ class Setup {
 		$table2 = $wpdb->prefix . self::GENERATORS_TABLE_NAME;
 		$table3 = $wpdb->prefix . self::API_KEYS_TABLE_NAME;
 		$table4 = $wpdb->prefix . self::LICENSE_META_TABLE_NAME;
+		$table5 = $wpdb->prefix . self::PRODUCTS_INSTALLED_ON_TABLE_NAME;
 
 		dbDelta( "
             CREATE TABLE IF NOT EXISTS $table1 (
@@ -199,6 +205,17 @@ class Setup {
                 `updated_at` DATETIME NULL DEFAULT NULL,
                 `updated_by` BIGINT(20) UNSIGNED NULL DEFAULT NULL,
                 PRIMARY KEY (`meta_id`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8
+        " );
+
+		dbDelta( "
+            CREATE TABLE IF NOT EXISTS $table5 (
+                `id` BIGINT(20) UNSIGNED AUTO_INCREMENT,
+                `product_name` VARCHAR(255) NULL,
+                `license_id` BIGINT(20) UNSIGNED NULL DEFAULT NULL,
+                `host` VARCHAR(255) NULL,
+                `last_ping` DATETIME NULL DEFAULT NULL,
+                PRIMARY KEY (`id`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8
         " );
 	}
@@ -345,7 +362,8 @@ class Setup {
 					'020' => '1',
 					'021' => '1',
 					'022' => '1',
-					'023' => '1'
+					'023' => '1',
+					'024' => '1'
 				)
 			),
 			'lmfwc_settings_order_status'             => array(
@@ -562,7 +580,8 @@ class Setup {
 
 		$capabilities['product'] = array(
 			'update_product',
-			'download_product'
+			'download_product',
+			'product_ping'
 		);
 
 		return $capabilities;

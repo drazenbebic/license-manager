@@ -571,6 +571,12 @@ class General {
 				'method'     => 'GET',
 				'deprecated' => false,
 			),
+			array(
+				'id'         => '024',
+				'name'       => 'v2/products/ping',
+				'method'     => 'POST',
+				'deprecated' => false,
+			),
 		);
 		$classList = array(
 			'GET'  => 'text-success',

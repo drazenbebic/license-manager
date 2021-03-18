@@ -6,6 +6,7 @@ use LicenseManagerForWooCommerce\Enums\LicenseStatus;
 use LicenseManagerForWooCommerce\Lists\APIKeyList;
 use LicenseManagerForWooCommerce\Lists\GeneratorsList;
 use LicenseManagerForWooCommerce\Lists\LicensesList;
+use LicenseManagerForWooCommerce\Lists\ProductsInstalledOnList;
 use LicenseManagerForWooCommerce\Models\Resources\ApiKey as ApiKeyResourceModel;
 use LicenseManagerForWooCommerce\Models\Resources\License as LicenseResourceModel;
 use LicenseManagerForWooCommerce\Repositories\Resources\ApiKey as ApiKeyResourceRepository;
@@ -35,6 +36,11 @@ class AdminMenus {
 	const GENERATORS_PAGE = 'lmfwc_generators';
 
 	/**
+	 * Products installed on page slug.
+	 */
+	public const PRODUCTS_INSTALLED_ON_PAGE = 'lmfwc_products_installed_on';
+
+	/**
 	 * Settings page slug.
 	 */
 	const SETTINGS_PAGE = 'lmfwc_settings';
@@ -42,12 +48,17 @@ class AdminMenus {
 	/**
 	 * @var LicensesList
 	 */
-	private $licenses;
+	private LicensesList $licenses;
 
 	/**
 	 * @var GeneratorsList
 	 */
-	private $generators;
+	private GeneratorsList $generators;
+
+	/**
+	 * @var ProductsInstalledOnList
+	 */
+	private ProductsInstalledOnList $products_installed_on;
 
 	/**
 	 * Class constructor.
@@ -114,6 +125,17 @@ class AdminMenus {
 		);
 		add_action( 'load-' . $generatorsHook, array( $this, 'generatorsPageScreenOptions' ) );
 
+		// Products installed on page
+		$productsInstalledOnHook = add_submenu_page(
+			self::LICENSES_PAGE,
+			__( 'License Manager - Products installed on', 'license-manager-for-woocommerce' ),
+			__( 'Products installed on', 'license-manager-for-woocommerce' ),
+			'manage_license_manager_for_woocommerce',
+			self::PRODUCTS_INSTALLED_ON_PAGE,
+			[ $this, 'productsInstalledOnPage' ]
+		);
+		add_action( 'load-' . $productsInstalledOnHook, [ $this, 'productsInstalledOnPageScreenOptions' ] );
+
 		// Settings Page
 		add_submenu_page(
 			self::LICENSES_PAGE,
@@ -128,7 +150,7 @@ class AdminMenus {
 	/**
 	 * Adds the supported screen options for the licenses list.
 	 */
-	public function licensesPageScreenOptions() {
+	public function licensesPageScreenOptions(): void {
 		$option = 'per_page';
 		$args   = array(
 			'label'   => __( 'License keys per page', 'license-manager-for-woocommerce' ),
@@ -144,7 +166,7 @@ class AdminMenus {
 	/**
 	 * Adds the supported screen options for the generators list.
 	 */
-	public function generatorsPageScreenOptions() {
+	public function generatorsPageScreenOptions(): void {
 		$option = 'per_page';
 		$args   = array(
 			'label'   => __( 'Generators per page', 'license-manager-for-woocommerce' ),
@@ -155,6 +177,22 @@ class AdminMenus {
 		add_screen_option( $option, $args );
 
 		$this->generators = new GeneratorsList;
+	}
+
+	/**
+	 * Adds the supported screen options for the products installed on list.
+	 */
+	public function productsInstalledOnPageScreenOptions(): void {
+		$option = 'per_page';
+		$args   = [
+			'label'   => __( 'Products installed on page', 'license-manager-for-woocommerce' ),
+			'default' => 10,
+			'option'  => 'products_installed_on_per_page'
+		];
+
+		add_screen_option( $option, $args );
+
+		$this->products_installed_on = new ProductsInstalledOnList();
 	}
 
 	/**
@@ -267,6 +305,15 @@ class AdminMenus {
 		}
 
 		include LMFWC_TEMPLATES_DIR . 'page-generators.php';
+	}
+
+	/**
+	 * Sets up the products installed on page.
+	 */
+	public function productsInstalledOnPage(): void {
+		$products_installed_on = $this->products_installed_on;
+
+		include LMFWC_TEMPLATES_DIR . 'page-products-installed-on.php';
 	}
 
 	/**
