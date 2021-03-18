@@ -345,7 +345,8 @@ class Setup {
 					'020' => '1',
 					'021' => '1',
 					'022' => '1',
-					'023' => '1'
+					'023' => '1',
+					'025' => '1'
 				)
 			),
 			'lmfwc_settings_order_status'             => array(
@@ -564,6 +565,10 @@ class Setup {
 			'update_product',
 			'download_product'
 		);
+
+		$capabilities['customer'] = [
+			'read_licenses',
+		];
 
 		return $capabilities;
 	}

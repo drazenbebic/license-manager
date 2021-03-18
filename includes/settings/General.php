@@ -571,6 +571,12 @@ class General {
 				'method'     => 'GET',
 				'deprecated' => false,
 			),
+			array(
+				'id'         => '025',
+				'name'       => 'v2/customers/{customer_id}/licenses',
+				'method'     => 'GET',
+				'deprecated' => false,
+			)
 		);
 		$classList = array(
 			'GET'  => 'text-success',

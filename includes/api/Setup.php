@@ -26,7 +26,8 @@ class Setup {
 			// REST API v2 controllers.
 			'\LicenseManagerForWooCommerce\API\v2\Licenses',
 			'\LicenseManagerForWooCommerce\API\v2\Products',
-			'\LicenseManagerForWooCommerce\API\v2\Generators'
+			'\LicenseManagerForWooCommerce\API\v2\Generators',
+			'\LicenseManagerForWooCommerce\API\v2\Customers'
 		);
 
 		foreach ( $controllers as $controller ) {
