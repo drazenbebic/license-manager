@@ -824,66 +824,56 @@ class Licenses extends LMFWC_REST_Controller {
 		}
 
 		if ( ! $this->capabilityCheck( 'validate_license' ) ) {
-			return new WP_Error(
-				'lmfwc_rest_cannot_view',
-				__( 'Sorry, you cannot view this resource.', 'license-manager-for-woocommerce' ),
-				array(
-					'status' => $this->authorizationRequiredCode()
-				)
-			);
+			return new WP_Error( 'lmfwc_rest_cannot_view', __( 'Sorry, you cannot view this resource.', 'license-manager-for-woocommerce' ), [ 'status' => $this->authorizationRequiredCode() ] );
 		}
 
 		$urlParams = $request->get_url_params();
 
 		if ( ! array_key_exists( 'license_key', $urlParams ) ) {
-			return new WP_Error(
-				'lmfwc_rest_data_error',
-				'License key is invalid.',
-				array( 'status' => 404 )
-			);
+			return new WP_Error( 'lmfwc_rest_data_error', 'License key is invalid.', [ 'status' => 404 ] );
 		}
 
 		$licenseKey = sanitize_text_field( $urlParams['license_key'] );
 
 		if ( ! $licenseKey ) {
-			return new WP_Error(
-				'lmfwc_rest_data_error',
-				'License key is invalid.',
-				array( 'status' => 404 )
-			);
+			return new WP_Error( 'lmfwc_rest_data_error', 'License key is invalid.', [ 'status' => 404 ] );
 		}
 
 		try {
 			/** @var LicenseResourceModel $license */
-			$license = LicenseResourceRepository::instance()->findBy(
-				array(
-					'hash' => apply_filters( 'lmfwc_hash', $licenseKey )
-				)
-			);
+			$license = LicenseResourceRepository::instance()->findBy( [ 'hash' => apply_filters( 'lmfwc_hash', $licenseKey ) ] );
 		} catch ( Exception $e ) {
-			return new WP_Error(
-				'lmfwc_rest_data_error',
-				$e->getMessage(),
-				array( 'status' => 404 )
-			);
+			return new WP_Error( 'lmfwc_rest_data_error', $e->getMessage(), [ 'status' => 404 ] );
 		}
 
-		if ( ! $license ) {
-			return new WP_Error(
-				'lmfwc_rest_data_error',
-				sprintf(
-					'License Key: %s could not be found.',
-					$licenseKey
-				),
-				array( 'status' => 404 )
-			);
+		if ( $license === null ) {
+			return new WP_Error( 'lmfwc_rest_data_error', sprintf( 'License Key: %s could not be found.', $licenseKey ), [ 'status' => 404 ] );
 		}
 
-		$result = array(
+		$product = wc_get_product( $license->getProductId() );
+
+		if ( $product === null ) {
+			return new WP_Error( 'lmfwc_rest_data_error', 'The assigned product could not be found.', [ 'status' => 404 ] );
+		}
+
+		$result = [
 			'timesActivated'       => (int) $license->getTimesActivated(),
 			'timesActivatedMax'    => (int) $license->getTimesActivatedMax(),
-			'remainingActivations' => (int) $license->getTimesActivatedMax() - (int) $license->getTimesActivated()
-		);
+			'remainingActivations' => (int) $license->getTimesActivatedMax() - (int) $license->getTimesActivated(),
+			'product'              => [
+				'id'                => $product->get_id(),
+				'sku'               => $product->get_sku(),
+				'name'              => $product->get_name(),
+				'price'             => $product->get_price(),
+				'salePrice'         => $product->get_sale_price(),
+				'description'       => $product->get_description(),
+				'shortDescription'  => $product->get_short_description(),
+				'availability'      => $product->get_availability(),
+				'catalogVisibility' => $product->get_catalog_visibility(),
+				'permalink'         => $product->get_permalink(),
+				'type'              => $product->get_type()
+			]
+		];
 
 		return $this->response( true, $result, 'v2/licenses/validate/{license_key}' );
 	}
